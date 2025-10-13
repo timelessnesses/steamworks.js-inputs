@@ -158,7 +158,6 @@ export declare namespace matchmaking {
   export function joinLobby(lobbyId: bigint): Promise<Lobby>
   export function getLobbies(): Promise<Array<Lobby>>
   export class Lobby {
-    id: bigint
     join(): Promise<Lobby>
     leave(): void
     openInviteDialog(): void
@@ -177,6 +176,9 @@ export declare namespace matchmaking {
      * @returns true if all data was set successfully
      */
     mergeFullData(data: Record<string, string>): boolean
+
+    id(): BigInt
+    idAsU64(): number
   }
 }
 export declare namespace networking {
