@@ -95,6 +95,28 @@ export declare namespace input {
     PS5Controller = 'PS5Controller',
     SteamDeckController = 'SteamDeckController'
   }
+  export interface MotionData {
+    /** Absolute Rotation (drift) X axis */
+    rotQuatX: number
+    /** Absolute Rotation (drift) Y axis */
+    rotQuatY: number
+    /** Absolute Rotation (drift) Z axis */
+    rotQuatZ: number
+    /** Absolute Rotation (drift) W axis */
+    rotQuatW: number
+    /** Positional Acceleration X axis */
+    posAccelX: number
+    /** Positional Acceleration Y axis */
+    posAccelY: number
+    /** Positional Acceleration Z axis */
+    posAccelZ: number
+    /** Rotational Velocity X axis */
+    rotVelX: number
+    /** Rotational Velocity Y axis */
+    rotVelY: number
+    /** Rotational Velocity Z axis */
+    rotVelZ: number
+  }
   export interface AnalogActionVector {
     x: number
     y: number
@@ -111,6 +133,10 @@ export declare namespace input {
     getAnalogActionVector(actionHandle: bigint): AnalogActionVector
     getType(): InputType
     getHandle(): bigint
+    /** Gets controller latest data, best use for low latency if you call this all the time */
+    runFrame(): void
+    /** Gets controller's motion sensors */
+    getMotionData(): MotionData | null
   }
 }
 export declare namespace localplayer {
@@ -336,6 +362,7 @@ export declare namespace workshop {
    * @returns an array of subscribed workshop item ids
    */
   export function getSubscribedItems(): Array<bigint>
+  export function deleteItem(itemId: bigint): Promise<void>
   export const enum UGCQueryType {
     RankedByVote = 0,
     RankedByPublicationDate = 1,

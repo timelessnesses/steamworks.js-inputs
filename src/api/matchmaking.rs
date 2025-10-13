@@ -18,7 +18,7 @@ pub mod matchmaking {
 
     #[napi]
     pub struct Lobby {
-        pub id: BigInt,
+        id: u64,
         lobby_id: LobbyId,
     }
 
@@ -26,7 +26,7 @@ pub mod matchmaking {
     impl Lobby {
         #[napi]
         pub async fn join(&self) -> Result<Lobby, Error> {
-            join_lobby(self.id.clone()).await
+            join_lobby(self.id.into()).await
         }
 
         #[napi]
@@ -126,8 +126,17 @@ pub mod matchmaking {
         pub fn merge_full_data(&self, data: HashMap<String, String>) -> bool {
             let matchmaking = crate::client::get_client().matchmaking();
             data.iter()
-                .map(|(key, value)| matchmaking.set_lobby_data(self.lobby_id, key, value))
-                .all(|x| x)
+                .all(|(key, value)| matchmaking.set_lobby_data(self.lobby_id, key, value))
+        }
+
+        #[napi(getter)]
+        pub fn id(&self) -> BigInt {
+            self.id.into()
+        }
+
+        #[napi(getter)]
+        pub fn id_as_u64(&self) -> u64 {
+            self.id
         }
     }
 
@@ -153,7 +162,7 @@ pub mod matchmaking {
         rx.await
             .unwrap()
             .map(|lobby_id| Lobby {
-                id: BigInt::from(lobby_id.raw()),
+                id: lobby_id.raw(),
                 lobby_id,
             })
             .map_err(|e| Error::from_reason(e.to_string()))
@@ -175,7 +184,7 @@ pub mod matchmaking {
         rx.await
             .unwrap()
             .map(|lobby_id| Lobby {
-                id: BigInt::from(lobby_id.raw()),
+                id: lobby_id.raw(),
                 lobby_id,
             })
             .map_err(|_| Error::from_reason("Failed to join lobby".to_string()))
@@ -197,7 +206,7 @@ pub mod matchmaking {
                 lobbies
                     .iter()
                     .map(|lobby_id| Lobby {
-                        id: BigInt::from(lobby_id.raw()),
+                        id: lobby_id.raw(),
                         lobby_id: *lobby_id,
                     })
                     .collect()

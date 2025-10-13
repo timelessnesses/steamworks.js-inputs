@@ -3,8 +3,8 @@ use napi_derive::napi;
 #[napi]
 pub mod callback {
     use napi::{
-        threadsafe_function::{ErrorStrategy, ThreadsafeFunction, ThreadsafeFunctionCallMode},
-        JsFunction,
+        threadsafe_function::{ThreadsafeFunction, ThreadsafeFunctionCallMode},
+        bindgen_prelude::Function,
     };
 
     #[napi]
@@ -17,7 +17,7 @@ pub mod callback {
         #[napi]
         pub fn disconnect(&mut self) {
             if let Some(handle) = self.handle.take() {
-                handle.disconnect();
+                drop(handle);
             }
         }
     }
@@ -39,11 +39,14 @@ pub mod callback {
     #[napi(ts_generic_types = "C extends keyof import('./callbacks').CallbackReturns")]
     pub fn register(
         #[napi(ts_arg_type = "C")] steam_callback: SteamCallback,
-        #[napi(ts_arg_type = "(value: import('./callbacks').CallbackReturns[C]) => void")] handler: JsFunction,
+        #[napi(ts_arg_type = "(value: import('./callbacks').CallbackReturns[C]) => void")] handler: Function<'static>,
     ) -> Handle {
-        let threadsafe_handler: ThreadsafeFunction<serde_json::Value, ErrorStrategy::Fatal> =
+        let threadsafe_handler: ThreadsafeFunction<serde_json::Value, napi::Unknown<'_>, Vec<serde_json::Value>, napi::Status, false> =
             handler
-                .create_threadsafe_function(0, |ctx| Ok(vec![ctx.value]))
+                .build_threadsafe_function::<serde_json::Value>()
+                .callee_handled::<false>()
+                .max_queue_size::<0>()
+                .build_callback(|ctx| Ok(vec![ctx.value]))
                 .unwrap();
 
         let handle = match steam_callback {
@@ -85,7 +88,7 @@ pub mod callback {
     }
 
     fn register_callback<C>(
-        threadsafe_handler: ThreadsafeFunction<serde_json::Value, ErrorStrategy::Fatal>,
+        threadsafe_handler: ThreadsafeFunction<serde_json::Value, napi::Unknown<'_>, Vec<serde_json::Value>, napi::Status, false>,
     ) -> steamworks::CallbackHandle
     where
         C: steamworks::Callback + serde::Serialize,

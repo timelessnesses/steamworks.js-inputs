@@ -3,11 +3,9 @@ use napi_derive::napi;
 #[napi]
 pub mod workshop {
     use napi::bindgen_prelude::{BigInt, Error};
-    use napi::threadsafe_function::ErrorStrategy;
-    use napi::threadsafe_function::ThreadsafeFunction;
     use napi::threadsafe_function::ThreadsafeFunctionCallMode;
     use std::path::Path;
-    use steamworks::{ClientManager, FileType, PublishedFileId, UpdateHandle};
+    use steamworks::{FileType, PublishedFileId, UpdateHandle};
     use tokio::sync::oneshot;
 
     #[napi(object)]
@@ -61,11 +59,11 @@ pub mod workshop {
     impl UgcUpdate {
         pub fn submit(
             self,
-            mut update: UpdateHandle<ClientManager>,
+            mut update: UpdateHandle,
             callback: impl FnOnce(Result<(PublishedFileId, bool), steamworks::SteamError>)
                 + Send
                 + 'static,
-        ) -> steamworks::UpdateWatchHandle<ClientManager> {
+        ) -> steamworks::UpdateWatchHandle {
             if let Some(title) = self.title {
                 update = update.title(title.as_str());
             }
@@ -206,22 +204,28 @@ pub mod workshop {
         update_details: UgcUpdate,
         app_id: Option<u32>,
 
-        #[napi(ts_arg_type = "(data: UgcResult) => void")] success_callback: napi::JsFunction,
+        #[napi(ts_arg_type = "(data: UgcResult) => void")] success_callback: napi::bindgen_prelude::Function<'static>,
 
-        #[napi(ts_arg_type = "(err: any) => void")] error_callback: napi::JsFunction,
+        #[napi(ts_arg_type = "(err: any) => void")] error_callback: napi::bindgen_prelude::Function<'static>,
 
         #[napi(ts_arg_type = "(data: UpdateProgress) => void")] progress_callback: Option<
-            napi::JsFunction,
+            napi::bindgen_prelude::Function<'static>,
         >,
 
         progress_callback_interval_ms: Option<u32>,
     ) {
-        let success_callback: ThreadsafeFunction<UgcResult, ErrorStrategy::Fatal> =
+        let success_callback =
             success_callback
-                .create_threadsafe_function(0, |ctx| Ok(vec![ctx.value]))
+                .build_threadsafe_function::<UgcResult>()
+                .callee_handled::<false>()
+                .max_queue_size::<0>()
+                .build_callback(|ctx| Ok(vec![ctx.value]))
                 .unwrap();
-        let error_callback: ThreadsafeFunction<Error, ErrorStrategy::Fatal> = error_callback
-            .create_threadsafe_function(0, |ctx| Ok(vec![ctx.value]))
+        let error_callback = error_callback
+            .build_threadsafe_function::<Error>()
+            .callee_handled::<false>()
+            .max_queue_size::<0>()
+            .build_callback(|ctx| Ok(vec![ctx.value]))
             .unwrap();
 
         let client = crate::client::get_client();
@@ -252,9 +256,12 @@ pub mod workshop {
             });
 
             if let Some(progress_callback) = progress_callback {
-                let progress_callback: ThreadsafeFunction<UpdateProgress, ErrorStrategy::Fatal> =
+                let progress_callback =
                     progress_callback
-                        .create_threadsafe_function(0, |ctx| Ok(vec![ctx.value]))
+                        .build_threadsafe_function::<UpdateProgress>()
+                        .callee_handled::<false>()
+                        .max_queue_size::<0>()
+                        .build_callback(|ctx| Ok(vec![ctx.value]))
                         .unwrap();
 
                 std::thread::spawn(move || loop {
@@ -396,7 +403,7 @@ pub mod workshop {
     #[napi]
     pub fn get_subscribed_items() -> Vec<BigInt> {
         let client = crate::client::get_client();
-        let result = client.ugc().subscribed_items();
+        let result = client.ugc().subscribed_items(false);
 
         result
             .iter()
