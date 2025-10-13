@@ -107,8 +107,6 @@ jobs:
                   if-no-files-found: error
 
     deploy:
-        # prevents this action from running on forks or pull requests
-        if: ${{ github.repository == 'ceifa/steamworks.js' && github.event_name == 'push' }}
 
         runs-on: ubuntu-latest
         needs: [build, build-mac]
