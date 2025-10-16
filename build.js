@@ -54,7 +54,8 @@ child_process.spawn('napi', params, { stdio: 'inherit', shell: true })
         if (err) {
             throw err;
         }
-    })
-
+        
 fs.copyFileSync(path.join(__dirname, "./index.d.ts"), path.join(dist, "index.d.ts"));
 fs.copyFileSync(path.join(__dirname, "index.js"), path.join(dist, "index.js"));
+fs.copyFileSync(path.join(__dirname, "client.d.ts"), path.join(dist, "client.d.ts"));
+    })
