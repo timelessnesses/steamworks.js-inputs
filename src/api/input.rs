@@ -46,6 +46,27 @@ pub mod input {
     }
 
     #[napi]
+    pub fn activate_action_set_all(action_set_handle: BigInt) {
+        let client = crate::client::get_client();
+        client
+            .input()
+            .activate_action_set_handle(u64::MAX ,action_set_handle.get_u64().1)
+    }
+
+    #[napi]
+    pub fn get_action_handle(action_name: String) -> BigInt {
+        let client = crate::client::get_client();
+        BigInt::from(client.input().get_action_set_handle(&action_name))
+    }
+
+    #[napi]
+    pub fn get_file_path_for_action(action_handle: InputActionOrigins) -> String {
+        let client = crate::client::get_client();
+        client.input().get_glyph_for_action_origin(action_handle.into())
+    }
+
+
+    #[napi]
     pub struct Controller {
         pub(crate) handle: BigInt,
     }
@@ -119,13 +140,25 @@ pub mod input {
         }
 
         #[napi]
-        pub fn get_file_path_for_action(&self, action_handle: InputActionOrigins) -> String {
-            let client = crate::client::get_client();
-            client.input().get_glyph_for_action_origin(action_handle.into())
+        pub fn trigger_haptic_pulse(&self, side: VibrateSide, duration: u16) {
+            unsafe {
+                let x = steamworks::sys::SteamAPI_SteamController_v008();
+                steamworks::sys::SteamAPI_ISteamController_TriggerHapticPulse(x, self.handle.get_u64().1, match side {
+                    VibrateSide::Left => steamworks::sys::ESteamControllerPad::k_ESteamControllerPad_Left,
+                    VibrateSide::Right => steamworks::sys::ESteamControllerPad::k_ESteamControllerPad_Right,
+                }, duration);
+            }
         }
-        
+
     }
 
+    #[napi]
+    pub enum VibrateSide {
+        Left,
+        Right
+    }
+
+    /// The conversion will return 32767 if the value is not found
     #[napi]
     #[repr(i32)]
     #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
