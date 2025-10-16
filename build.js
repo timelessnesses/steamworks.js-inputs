@@ -44,7 +44,6 @@ const params = [
     'build',
     '--platform',
     '--no-dts-header',
-    '--js', 'false',
     '--dts', '../../client.d.ts',
     '-o', relative,
     process.argv.slice(2).join(' ')
@@ -56,3 +55,6 @@ child_process.spawn('napi', params, { stdio: 'inherit', shell: true })
             throw err;
         }
     })
+
+fs.copyFileSync(path.join(__dirname, "./index.d.ts"), path.join(dist, "index.d.ts"));
+fs.copyFileSync(path.join(__dirname, "index.js"), path.join(dist, "index.js"));
