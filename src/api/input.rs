@@ -141,14 +141,14 @@ pub mod input {
             }
         }
 
+        /// Triggers a vibration event
+        /// It has intensity from 0 (off) to 65535 (max)
+        /// use something like `setTimeout` to make a timed vibration
         #[napi]
-        pub fn trigger_haptic_pulse(&self, side: VibrateSide, duration: u16) {
+        pub fn trigger_vibration(&self, left_speed_micro_second: u16, right_speed_micro_second: u16) {
             unsafe {
-                let x = steamworks::sys::SteamAPI_SteamController_v008();
-                steamworks::sys::SteamAPI_ISteamController_TriggerHapticPulse(x, self.handle.get_u64().1, match side {
-                    VibrateSide::Left => steamworks::sys::ESteamControllerPad::k_ESteamControllerPad_Left,
-                    VibrateSide::Right => steamworks::sys::ESteamControllerPad::k_ESteamControllerPad_Right,
-                }, duration);
+                let x = steamworks::sys::SteamAPI_SteamInput_v006();
+                steamworks::sys::SteamAPI_ISteamInput_TriggerVibration(x, self.handle.get_u64().1, left_speed_micro_second, right_speed_micro_second);
             }
         }
 
@@ -698,10 +698,13 @@ pub mod input {
     }
 
     #[napi]
-    pub fn set_input_action_manifest_file_path(path: String) {
+    pub fn set_input_action_manifest_file_path(path: String) -> napi::Result<()> {
+        let path = CString::new(path).map_err(|a| napi::Error::from_reason(a.to_string()))?;
         unsafe {
             let x = steamworks::sys::SteamAPI_SteamInput_v006();
-            steamworks::sys::SteamAPI_ISteamInput_SetInputActionManifestFilePath(x, CString::new(path).unwrap().as_ptr());
+            steamworks::sys::SteamAPI_ISteamInput_SetInputActionManifestFilePath(x, path.as_ptr());
         }
+
+        Ok(())
     }
 }
