@@ -152,6 +152,19 @@ pub mod input {
             }
         }
 
+        #[napi]
+        pub fn get_analog_action_origins(&self, action_set_handle: BigInt, analog_action_handle: BigInt) -> Vec<InputActionOrigins> {
+            let client = crate::client::get_client();
+            let out = client.input().get_analog_action_origins(self.handle.get_u64().1, action_set_handle.get_u64().1, analog_action_handle.get_u64().1);
+            out.iter().map(|i| InputActionOrigins::from(*i)).collect()
+        }
+
+        #[napi]
+        pub fn get_digital_action_origins(&self, action_set_handle: BigInt, digital_action_handle: BigInt) -> Vec<InputActionOrigins> {
+            let client = crate::client::get_client();
+            let out = client.input().get_digital_action_origins(self.handle.get_u64().1, action_set_handle.get_u64().1, digital_action_handle.get_u64().1);
+            out.iter().map(|i| InputActionOrigins::from(*i)).collect()
+        }
     }
 
     #[napi]
