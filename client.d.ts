@@ -97,17 +97,26 @@ export declare namespace input {
     runFrame(): void
     /** Gets controller's motion sensors */
     getMotionData(): MotionData | null
-    getFilePathForAction(actionHandle: InputActionOrigins): string
+    /**
+     * Triggers a vibration event
+     * It has intensity from 0 (off) to 65535 (max)
+     * use something like `setTimeout` to make a timed vibration
+     */
+    triggerVibration(leftSpeedMicroSecond: number, rightSpeedMicroSecond: number): void
   }
+  export function activateActionSetAll(actionSetHandle: bigint): void
   export interface AnalogActionVector {
     x: number
     y: number
   }
+  export function getActionHandle(actionName: string): bigint
   export function getActionSet(actionSetName: string): bigint
   export function getAnalogAction(actionName: string): bigint
   export function getControllers(): Array<Controller>
   export function getDigitalAction(actionName: string): bigint
+  export function getFilePathForAction(actionHandle: InputActionOrigins): string
   export function init(): void
+  /** The conversion will return 32767 if the value is not found */
   export const enum InputActionOrigins {
     None = 0,
     SteamControllerA = 1,
@@ -561,7 +570,12 @@ export declare namespace input {
     /** Rotational Velocity Z axis */
     rotVelZ: number
   }
+  export function setInputActionManifestFilePath(path: string): void
   export function shutdown(): void
+  export const enum VibrateSide {
+    Left = 0,
+    Right = 1
+  }
 }
 
 export declare namespace localplayer {
