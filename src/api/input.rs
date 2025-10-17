@@ -2,6 +2,8 @@ use napi_derive::napi;
 
 #[napi]
 pub mod input {
+    use std::ffi::CString;
+
     use napi::bindgen_prelude::BigInt;
 
     #[napi(string_enum)]
@@ -693,5 +695,13 @@ pub mod input {
     pub fn shutdown() {
         let client = crate::client::get_client();
         client.input().shutdown()
+    }
+
+    #[napi]
+    pub fn set_input_action_manifest_file_path(path: String) {
+        unsafe {
+            let x = steamworks::sys::SteamAPI_SteamInput_v006();
+            steamworks::sys::SteamAPI_ISteamInput_SetInputActionManifestFilePath(x, CString::new(path).unwrap().as_ptr());
+        }
     }
 }
