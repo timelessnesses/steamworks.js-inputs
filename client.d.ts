@@ -93,10 +93,8 @@ export declare namespace input {
     getAnalogActionVector(actionHandle: bigint): AnalogActionVector
     getType(): InputType
     getHandle(): bigint
-    /** Gets controller latest data, best use for low latency if you call this all the time */
-    runFrame(): void
     /** Gets controller's motion sensors */
-    getMotionData(): MotionData | null
+    getMotionData(): MotionData
     /**
      * Triggers a vibration event
      * It has intensity from 0 (off) to 65535 (max)
@@ -572,7 +570,8 @@ export declare namespace input {
     /** Rotational Velocity Z axis */
     rotVelZ: number
   }
-  export function setInputActionManifestFilePath(path: string): void
+  export function runFrame(): void
+  export function setInputActionManifestFilePath(path: string): boolean
   export function shutdown(): void
   export const enum VibrateSide {
     Left = 0,

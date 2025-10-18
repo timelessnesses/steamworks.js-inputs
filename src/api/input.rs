@@ -67,6 +67,11 @@ pub mod input {
         client.input().get_glyph_for_action_origin(action_handle.into())
     }
 
+    #[napi]
+    pub fn run_frame() {
+        let client = crate::client::get_client();
+        client.input().run_frame();
+    }
 
     #[napi]
     pub struct Controller {
@@ -118,27 +123,14 @@ pub mod input {
             self.handle.clone()
         }
 
-        /// Gets controller latest data, best use for low latency if you call this all the time
-        #[napi]
-        pub fn run_frame(&self) {
-            let client = crate::client::get_client();
-            client.input().run_frame();
-        }
-
         /// Gets controller's motion sensors
         #[napi]
-        pub fn get_motion_data(&self) -> Option<MotionData> {
+        pub fn get_motion_data(&self) -> MotionData {
             let client = crate::client::get_client();
-            let a =client
+            return client
                 .input()
-                .get_motion_data(self.handle.get_u64().1);
-            let quat_is_identity = a.rotQuatX == 0.0 && a.rotQuatY == 0.0 && a.rotQuatZ == 0.0 && a.rotQuatW == 1.0;
-            let accel_and_rot_vel_are_zero = a.posAccelX == 0.0 && a.posAccelY == 0.0 && a.posAccelZ == 0.0 && a.rotVelX == 0.0 && a.rotVelY == 0.0 && a.rotVelZ == 0.0;
-            if quat_is_identity && accel_and_rot_vel_are_zero {
-                None
-            } else {
-                Some(a.into())
-            }
+                .get_motion_data(self.handle.get_u64().1)
+                .into();
         }
 
         /// Triggers a vibration event
@@ -680,8 +672,11 @@ pub mod input {
             .input()
             .get_connected_controllers()
             .into_iter()
-            .map(|identity| Controller {
-                handle: BigInt::from(identity),
+            .filter(|identity| identity != &0)
+            .map(|identity| {
+                Controller {
+                    handle: BigInt::from(identity),
+                }
             })
             .collect()
     }
@@ -711,13 +706,12 @@ pub mod input {
     }
 
     #[napi]
-    pub fn set_input_action_manifest_file_path(path: String) -> napi::Result<()> {
+    pub fn set_input_action_manifest_file_path(path: String) -> napi::Result<bool> {
         let path = CString::new(path).map_err(|a| napi::Error::from_reason(a.to_string()))?;
         unsafe {
             let x = steamworks::sys::SteamAPI_SteamInput_v006();
-            steamworks::sys::SteamAPI_ISteamInput_SetInputActionManifestFilePath(x, path.as_ptr());
+            return Ok(steamworks::sys::SteamAPI_ISteamInput_SetInputActionManifestFilePath(x, path.as_ptr()));
         }
 
-        Ok(())
     }
 }
