@@ -3,15 +3,12 @@ const { init } = require('../index.js')
 
 const client = init(2234234)
 
-// 1) Set manifest path BEFORE init (absolute path recommended)
 const manifestPath = path.join(__dirname, '../aufh.vdf')
 console.log('Using manifest:', manifestPath)
 console.log(client.input.setInputActionManifestFilePath(manifestPath))
 
-// 2) Init Steam Input after path is set
 client.input.init()
 
-// Optional: confirm handles are non-zero and print them
 const actionset = client.input.getActionSet('gameplay')
 console.log('ActionSet handle:', actionset) // should not be 0
 
