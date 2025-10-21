@@ -157,6 +157,14 @@ pub mod input {
             let out = client.input().get_digital_action_origins(self.handle.get_u64().1, action_set_handle.get_u64().1, digital_action_handle.get_u64().1);
             out.iter().map(|i| InputActionOrigins::from(*i)).collect()
         }
+
+        #[napi]
+        pub fn get_current_active_action_set(&self) -> BigInt {
+            unsafe {
+                let x = steamworks::sys::SteamAPI_SteamInput_v006();
+                steamworks::sys::SteamAPI_ISteamInput_GetCurrentActionSet(x, self.handle.get_u64().1).into()
+            }
+        }
     }
 
     #[napi]
