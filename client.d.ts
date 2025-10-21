@@ -103,6 +103,7 @@ export declare namespace input {
     triggerVibration(leftSpeedMicroSecond: number, rightSpeedMicroSecond: number): void
     getAnalogActionOrigins(actionSetHandle: bigint, analogActionHandle: bigint): Array<InputActionOrigins>
     getDigitalActionOrigins(actionSetHandle: bigint, digitalActionHandle: bigint): Array<InputActionOrigins>
+    getCurrentActiveActionSet(): bigint
   }
   export function activateActionSetAll(actionSetHandle: bigint): void
   export interface AnalogActionVector {
