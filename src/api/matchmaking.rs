@@ -31,31 +31,31 @@ pub mod matchmaking {
 
         #[napi]
         pub fn leave(&self) {
-            let client = crate::client::get_client();
+            let client = crate::client::get_client().unwrap();
             client.matchmaking().leave_lobby(self.lobby_id);
         }
 
         #[napi]
         pub fn open_invite_dialog(&self) {
-            let client = crate::client::get_client();
+            let client = crate::client::get_client().unwrap();
             client.friends().activate_invite_dialog(self.lobby_id);
         }
 
         #[napi]
         pub fn get_member_count(&self) -> usize {
-            let client = crate::client::get_client();
+            let client = crate::client::get_client().unwrap();
             client.matchmaking().lobby_member_count(self.lobby_id)
         }
 
         #[napi]
         pub fn get_member_limit(&self) -> Option<usize> {
-            let client = crate::client::get_client();
+            let client = crate::client::get_client().unwrap();
             client.matchmaking().lobby_member_limit(self.lobby_id)
         }
 
         #[napi]
         pub fn get_members(&self) -> Vec<PlayerSteamId> {
-            let client = crate::client::get_client();
+            let client = crate::client::get_client().unwrap();
             client
                 .matchmaking()
                 .lobby_members(self.lobby_id)
@@ -66,13 +66,13 @@ pub mod matchmaking {
 
         #[napi]
         pub fn get_owner(&self) -> PlayerSteamId {
-            let client = crate::client::get_client();
+            let client = crate::client::get_client().unwrap();
             PlayerSteamId::from_steamid(client.matchmaking().lobby_owner(self.lobby_id))
         }
 
         #[napi]
         pub fn set_joinable(&self, joinable: bool) -> bool {
-            let client = crate::client::get_client();
+            let client = crate::client::get_client().unwrap();
             client
                 .matchmaking()
                 .set_lobby_joinable(self.lobby_id, joinable)
@@ -80,7 +80,7 @@ pub mod matchmaking {
 
         #[napi]
         pub fn get_data(&self, key: String) -> Option<String> {
-            let client = crate::client::get_client();
+            let client = crate::client::get_client().unwrap();
             client
                 .matchmaking()
                 .lobby_data(self.lobby_id, &key)
@@ -89,7 +89,7 @@ pub mod matchmaking {
 
         #[napi]
         pub fn set_data(&self, key: String, value: String) -> bool {
-            let client = crate::client::get_client();
+            let client = crate::client::get_client().unwrap();
             client
                 .matchmaking()
                 .set_lobby_data(self.lobby_id, &key, &value)
@@ -97,14 +97,14 @@ pub mod matchmaking {
 
         #[napi]
         pub fn delete_data(&self, key: String) -> bool {
-            let client = crate::client::get_client();
+            let client = crate::client::get_client().unwrap();
             client.matchmaking().delete_lobby_data(self.lobby_id, &key)
         }
 
         /// Get an object containing all the lobby data
         #[napi]
         pub fn get_full_data(&self) -> HashMap<String, String> {
-            let client = crate::client::get_client();
+            let client = crate::client::get_client().unwrap();
 
             let mut data = HashMap::new();
 
@@ -124,7 +124,7 @@ pub mod matchmaking {
         /// @returns true if all data was set successfully
         #[napi]
         pub fn merge_full_data(&self, data: HashMap<String, String>) -> bool {
-            let matchmaking = crate::client::get_client().matchmaking();
+            let matchmaking = crate::client::get_client().unwrap().matchmaking();
             data.iter()
                 .all(|(key, value)| matchmaking.set_lobby_data(self.lobby_id, key, value))
         }
@@ -142,7 +142,7 @@ pub mod matchmaking {
 
     #[napi]
     pub async fn create_lobby(lobby_type: LobbyType, max_members: u32) -> Result<Lobby, Error> {
-        let client = crate::client::get_client();
+        let client = crate::client::get_client().unwrap();
 
         let (tx, rx) = oneshot::channel();
 
@@ -170,7 +170,7 @@ pub mod matchmaking {
 
     #[napi]
     pub async fn join_lobby(lobby_id: BigInt) -> Result<Lobby, Error> {
-        let client = crate::client::get_client();
+        let client = crate::client::get_client().unwrap();
 
         let (tx, rx) = oneshot::channel();
 
@@ -192,7 +192,7 @@ pub mod matchmaking {
 
     #[napi]
     pub async fn get_lobbies() -> Result<Vec<Lobby>, Error> {
-        let client = crate::client::get_client();
+        let client = crate::client::get_client().unwrap();
 
         let (tx, rx) = oneshot::channel();
 

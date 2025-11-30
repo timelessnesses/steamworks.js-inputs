@@ -104,7 +104,7 @@ pub mod callback {
     where
         C: steamworks::Callback + serde::Serialize,
     {
-        let client = crate::client::get_client();
+        let client = crate::client::get_client().unwrap();
         client.register_callback(move |value: C| {
             let value = serde_json::to_value(&value).unwrap();
             threadsafe_handler.call(value, ThreadsafeFunctionCallMode::Blocking);

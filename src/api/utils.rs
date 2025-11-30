@@ -9,19 +9,19 @@ pub mod utils {
 
     #[napi]
     pub fn get_app_id() -> u32 {
-        let client = crate::client::get_client();
+        let client = crate::client::get_client().unwrap();
         client.utils().app_id().0
     }
 
     #[napi]
     pub fn get_server_real_time() -> u32 {
-        let client = crate::client::get_client();
+        let client = crate::client::get_client().unwrap();
         client.utils().get_server_real_time()
     }
 
     #[napi]
     pub fn is_steam_running_on_steam_deck() -> bool {
-        let client = crate::client::get_client();
+        let client = crate::client::get_client().unwrap();
         client.utils().is_steam_running_on_steam_deck()
     }
 
@@ -46,7 +46,7 @@ pub mod utils {
         max_characters: u32,
         existing_text: Option<String>,
     ) -> Option<String> {
-        let client = crate::client::get_client();
+        let client = crate::client::get_client().unwrap();
 
         let (tx, rx) = oneshot::channel();
         let mut tx = Some(tx);
@@ -97,7 +97,7 @@ pub mod utils {
         width: i32,
         height: i32,
     ) -> bool {
-        let client = crate::client::get_client();
+        let client = crate::client::get_client().unwrap();
 
         let (tx, rx) = oneshot::channel();
         let mut tx = Some(tx);

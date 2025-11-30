@@ -14,25 +14,25 @@ pub mod cloud {
 
     #[napi]
     pub fn is_enabled_for_account() -> bool {
-        let client = crate::client::get_client();
+        let client = crate::client::get_client().unwrap();
         client.remote_storage().is_cloud_enabled_for_account()
     }
 
     #[napi]
     pub fn is_enabled_for_app() -> bool {
-        let client = crate::client::get_client();
+        let client = crate::client::get_client().unwrap();
         client.remote_storage().is_cloud_enabled_for_app()
     }
 
     #[napi]
     pub fn set_enabled_for_app(enabled: bool) {
-        let client = crate::client::get_client();
+        let client = crate::client::get_client().unwrap();
         client.remote_storage().set_cloud_enabled_for_app(enabled)
     }
 
     #[napi]
     pub fn read_file(name: String) -> Result<String, Error> {
-        let client = crate::client::get_client();
+        let client = crate::client::get_client().unwrap();
         let mut buf: String = String::new();
         let size = client
             .remote_storage()
@@ -48,7 +48,7 @@ pub mod cloud {
 
     #[napi]
     pub fn write_file(name: String, content: String) -> bool {
-        let client = crate::client::get_client();
+        let client = crate::client::get_client().unwrap();
         let file = client.remote_storage().file(&name);
 
         let buf = content.as_bytes();
@@ -57,7 +57,7 @@ pub mod cloud {
 
     #[napi]
     pub fn delete_file(name: String) -> bool {
-        let client = crate::client::get_client();
+        let client = crate::client::get_client().unwrap();
         let file = client.remote_storage().file(&name);
 
         file.delete()
@@ -65,7 +65,7 @@ pub mod cloud {
 
     #[napi]
     pub fn file_exists(name: String) -> bool {
-        let client = crate::client::get_client();
+        let client = crate::client::get_client().unwrap();
         let file = client.remote_storage().file(&name);
 
         file.exists()
@@ -73,7 +73,7 @@ pub mod cloud {
 
     #[napi]
     pub fn list_files() -> Vec<FileInfo> {
-        let client = crate::client::get_client();
+        let client = crate::client::get_client().unwrap();
         client
             .remote_storage()
             .files()

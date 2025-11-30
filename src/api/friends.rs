@@ -37,7 +37,7 @@ pub mod friends {
 
     #[napi]
     pub async fn request_user_information(steam_id: BigInt, require_name_only: bool, timeout_seconds: Option<u32>) -> Result<FriendInfo, napi::Error> {
-        let client = crate::client::get_client();
+        let client = crate::client::get_client().unwrap();
         let steam_id = steamworks::SteamId::from_raw(steam_id.get_u64().1);
         if client
             .friends()

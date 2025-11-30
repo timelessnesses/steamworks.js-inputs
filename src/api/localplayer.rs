@@ -26,33 +26,33 @@ pub mod localplayer {
 
     #[napi]
     pub fn get_steam_id() -> PlayerSteamId {
-        let client = crate::client::get_client();
+        let client = crate::client::get_client().unwrap();
         let steam_id = client.user().steam_id();
         PlayerSteamId::from_steamid(steam_id)
     }
 
     #[napi]
     pub fn get_name() -> String {
-        let client = crate::client::get_client();
+        let client = crate::client::get_client().unwrap();
         client.friends().name()
     }
 
     #[napi]
     pub fn get_level() -> u32 {
-        let client = crate::client::get_client();
+        let client = crate::client::get_client().unwrap();
         client.user().level()
     }
 
     /// @returns the 2 digit ISO 3166-1-alpha-2 format country code which client is running in, e.g. "US" or "UK".
     #[napi]
     pub fn get_ip_country() -> String {
-        let client = crate::client::get_client();
+        let client = crate::client::get_client().unwrap();
         client.utils().ip_country()
     }
 
     #[napi]
     pub fn set_rich_presence(key: String, value: Option<String>) {
-        let client = crate::client::get_client();
+        let client = crate::client::get_client().unwrap();
         client.friends().set_rich_presence(&key, value.as_deref());
     }
 }

@@ -12,4 +12,4 @@ const whoeverthisis = client.friends.requestUserInformation(BigInt("765611983446
 
 console.log(timmy);
 console.log(whoeverthisis);
-// client.shutdownClient();
+client.shutdownClient();

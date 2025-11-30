@@ -430,7 +430,7 @@ pub mod workshop {
         item: BigInt,
         query_config: Option<WorkshopItemQueryConfig>,
     ) -> Result<Option<WorkshopItem>, Error> {
-        let client = crate::client::get_client();
+        let client = crate::client::get_client().unwrap();
         let (tx, rx) = oneshot::channel();
 
         {
@@ -460,7 +460,7 @@ pub mod workshop {
         items: Vec<BigInt>,
         query_config: Option<WorkshopItemQueryConfig>,
     ) -> Result<WorkshopItemsResult, Error> {
-        let client = crate::client::get_client();
+        let client = crate::client::get_client().unwrap();
         let (tx, rx) = oneshot::channel();
 
         {
@@ -500,7 +500,7 @@ pub mod workshop {
         consumer_app_id: u32,
         query_config: Option<WorkshopItemQueryConfig>,
     ) -> Result<WorkshopPaginatedResult, Error> {
-        let client = crate::client::get_client();
+        let client = crate::client::get_client().unwrap();
         let (tx, rx) = oneshot::channel();
 
         {
@@ -543,7 +543,7 @@ pub mod workshop {
         app_ids: AppIDs,
         query_config: Option<WorkshopItemQueryConfig>,
     ) -> Result<WorkshopPaginatedResult, Error> {
-        let client = crate::client::get_client();
+        let client = crate::client::get_client().unwrap();
         let (tx, rx) = oneshot::channel();
 
         {

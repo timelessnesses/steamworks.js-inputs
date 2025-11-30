@@ -40,7 +40,7 @@ pub fn restart_app_if_necessary(app_id: u32) -> bool {
 
 #[napi]
 pub fn run_callbacks() {
-    client::get_client().run_callbacks();
+    client::get_client().unwrap().run_callbacks();
 }
 
 #[napi]

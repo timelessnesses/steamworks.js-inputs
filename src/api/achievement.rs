@@ -4,7 +4,7 @@ use napi_derive::napi;
 pub mod achievement {
     #[napi]
     pub fn activate(achievement: String) -> bool {
-        let client = crate::client::get_client();
+        let client = crate::client::get_client().unwrap();
         client
             .user_stats()
             .achievement(&achievement)
@@ -15,7 +15,7 @@ pub mod achievement {
 
     #[napi]
     pub fn is_activated(achievement: String) -> bool {
-        let client = crate::client::get_client();
+        let client = crate::client::get_client().unwrap();
         client
             .user_stats()
             .achievement(&achievement)
@@ -25,7 +25,7 @@ pub mod achievement {
 
     #[napi]
     pub fn clear(achievement: String) -> bool {
-        let client = crate::client::get_client();
+        let client = crate::client::get_client().unwrap();
         client
             .user_stats()
             .achievement(&achievement)
@@ -36,7 +36,7 @@ pub mod achievement {
 
     #[napi]
     pub fn names() -> Vec<String> {
-        let client = crate::client::get_client();
+        let client = crate::client::get_client().unwrap();
         client
             .user_stats()
             .get_achievement_names()

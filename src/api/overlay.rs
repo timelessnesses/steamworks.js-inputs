@@ -40,13 +40,13 @@ pub mod overlay {
 
     #[napi]
     pub fn activate_dialog(dialog: Dialog) {
-        let client = crate::client::get_client();
+        let client = crate::client::get_client().unwrap();
         client.friends().activate_game_overlay(&dialog.to_string())
     }
 
     #[napi]
     pub fn activate_dialog_to_user(dialog: Dialog, steam_id64: BigInt) {
-        let client = crate::client::get_client();
+        let client = crate::client::get_client().unwrap();
         client.friends().activate_game_overlay_to_user(
             &dialog.to_string(),
             steamworks::SteamId::from_raw(steam_id64.get_u64().1),
@@ -55,7 +55,7 @@ pub mod overlay {
 
     #[napi]
     pub fn activate_invite_dialog(lobby_id: BigInt) {
-        let client = crate::client::get_client();
+        let client = crate::client::get_client().unwrap();
         client
             .friends()
             .activate_invite_dialog(steamworks::LobbyId::from_raw(lobby_id.get_u64().1))
@@ -63,13 +63,13 @@ pub mod overlay {
 
     #[napi]
     pub fn activate_to_web_page(url: String) {
-        let client = crate::client::get_client();
+        let client = crate::client::get_client().unwrap();
         client.friends().activate_game_overlay_to_web_page(&url)
     }
 
     #[napi]
     pub fn activate_to_store(app_id: u32, flag: StoreFlag) {
-        let client = crate::client::get_client();
+        let client = crate::client::get_client().unwrap();
         client.friends().activate_game_overlay_to_store(
             steamworks::AppId(app_id),
             match flag {

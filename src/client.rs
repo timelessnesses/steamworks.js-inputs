@@ -9,9 +9,9 @@ pub fn has_client() -> bool {
     STEAM_CLIENT.lock().unwrap().is_some()
 }
 
-pub fn get_client() -> Arc<Client> {
+pub fn get_client() -> Result<Arc<Client>, &'static str> {
     let option = STEAM_CLIENT.lock().unwrap().to_owned();
-    option.unwrap()
+    option.ok_or_else(|| "Steam client's not initialized.")
 }
 
 pub fn set_client(client: Client) {
@@ -20,6 +20,9 @@ pub fn set_client(client: Client) {
 }
 
 pub fn drop_client() {
+    if !has_client() {
+        return;
+    }
     let mut client_ref = STEAM_CLIENT.lock().unwrap();
     if let Some(arc) = client_ref.take() {
         match Arc::try_unwrap(arc) {

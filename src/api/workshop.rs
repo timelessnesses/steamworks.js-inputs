@@ -141,7 +141,7 @@ pub mod workshop {
 
     #[napi]
     pub async fn create_item(app_id: Option<u32>) -> Result<UgcResult, Error> {
-        let client = crate::client::get_client();
+        let client = crate::client::get_client().unwrap();
         let app_id = app_id
             .map(steamworks::AppId)
             .unwrap_or_else(|| client.utils().app_id());
@@ -170,7 +170,7 @@ pub mod workshop {
         update_details: UgcUpdate,
         app_id: Option<u32>,
     ) -> Result<UgcResult, Error> {
-        let client = crate::client::get_client();
+        let client = crate::client::get_client().unwrap();
 
         let app_id = app_id
             .map(steamworks::AppId)
@@ -230,7 +230,7 @@ pub mod workshop {
             .build_callback(|ctx| Ok(vec![ctx.value]))
             .unwrap();
 
-        let client = crate::client::get_client();
+        let client = crate::client::get_client().unwrap();
 
         let app_id = app_id
             .map(steamworks::AppId)
@@ -291,7 +291,7 @@ pub mod workshop {
     /// {@link https://partner.steamgames.com/doc/api/ISteamUGC#SubscribeItem}
     #[napi]
     pub async fn subscribe(item_id: BigInt) -> Result<(), Error> {
-        let client = crate::client::get_client();
+        let client = crate::client::get_client().unwrap();
         let (tx, rx) = oneshot::channel();
 
         client
@@ -312,7 +312,7 @@ pub mod workshop {
     /// {@link https://partner.steamgames.com/doc/api/ISteamUGC#UnsubscribeItem}
     #[napi]
     pub async fn unsubscribe(item_id: BigInt) -> Result<(), Error> {
-        let client = crate::client::get_client();
+        let client = crate::client::get_client().unwrap();
         let (tx, rx) = oneshot::channel();
 
         client
@@ -337,7 +337,7 @@ pub mod workshop {
     /// {@link https://partner.steamgames.com/doc/api/ISteamUGC#EItemState}
     #[napi]
     pub fn state(item_id: BigInt) -> u32 {
-        let client = crate::client::get_client();
+        let client = crate::client::get_client().unwrap();
         let result = client
             .ugc()
             .item_state(PublishedFileId(item_id.get_u64().1));
@@ -352,7 +352,7 @@ pub mod workshop {
     /// {@link https://partner.steamgames.com/doc/api/ISteamUGC#GetItemInstallInfo}
     #[napi]
     pub fn install_info(item_id: BigInt) -> Option<InstallInfo> {
-        let client = crate::client::get_client();
+        let client = crate::client::get_client().unwrap();
         let result = client
             .ugc()
             .item_install_info(PublishedFileId(item_id.get_u64().1));
@@ -374,7 +374,7 @@ pub mod workshop {
     /// {@link https://partner.steamgames.com/doc/api/ISteamUGC#GetItemDownloadInfo}
     #[napi]
     pub fn download_info(item_id: BigInt) -> Option<DownloadInfo> {
-        let client = crate::client::get_client();
+        let client = crate::client::get_client().unwrap();
         let result = client
             .ugc()
             .item_download_info(PublishedFileId(item_id.get_u64().1));
@@ -393,7 +393,7 @@ pub mod workshop {
     /// {@link https://partner.steamgames.com/doc/api/ISteamUGC#DownloadItem}
     #[napi]
     pub fn download(item_id: BigInt, high_priority: bool) -> bool {
-        let client = crate::client::get_client();
+        let client = crate::client::get_client().unwrap();
         client
             .ugc()
             .download_item(PublishedFileId(item_id.get_u64().1), high_priority)
@@ -403,7 +403,7 @@ pub mod workshop {
     /// @returns an array of subscribed workshop item ids
     #[napi]
     pub fn get_subscribed_items() -> Vec<BigInt> {
-        let client = crate::client::get_client();
+        let client = crate::client::get_client().unwrap();
         let result = client.ugc().subscribed_items(false);
 
         result
@@ -416,7 +416,7 @@ pub mod workshop {
     // @returns true or false
     #[napi]
     pub async fn delete_item(item_id: BigInt) -> Result<(), Error> {
-        let client = crate::client::get_client();
+        let client = crate::client::get_client().unwrap();
         let (tx, rx) = oneshot::channel();
 
         client

@@ -49,13 +49,13 @@ pub mod input {
 
     #[napi]
     pub fn get_action_handle(action_name: String) -> BigInt {
-        let client = crate::client::get_client();
+        let client = crate::client::get_client().unwrap();
         BigInt::from(client.input().get_action_set_handle(&action_name))
     }
 
     #[napi]
     pub fn get_file_path_for_action(action_handle: InputActionOrigins) -> String {
-        let client = crate::client::get_client();
+        let client = crate::client::get_client().unwrap();
         client
             .input()
             .get_glyph_for_action_origin(action_handle.into())
@@ -63,7 +63,7 @@ pub mod input {
 
     #[napi]
     pub fn run_frame() {
-        let client = crate::client::get_client();
+        let client = crate::client::get_client().unwrap();
         client.input().run_frame();
     }
 
@@ -76,7 +76,7 @@ pub mod input {
     impl Controller {
         #[napi]
         pub fn activate_action_set(&self, action_set_handle: BigInt) -> bool {
-            let client = crate::client::get_client();
+            let client = crate::client::get_client().unwrap();
             client
                 .input()
                 .activate_action_set_handle(self.handle.get_u64().1, action_set_handle.get_u64().1);
@@ -85,7 +85,7 @@ pub mod input {
 
         #[napi]
         pub fn is_digital_action_pressed(&self, action_handle: BigInt) -> bool {
-            let client = crate::client::get_client();
+            let client = crate::client::get_client().unwrap();
             client
                 .input()
                 .get_digital_action_data(self.handle.get_u64().1, action_handle.get_u64().1)
@@ -94,7 +94,7 @@ pub mod input {
 
         #[napi]
         pub fn get_analog_action_vector(&self, action_handle: BigInt) -> AnalogActionVector {
-            let client = crate::client::get_client();
+            let client = crate::client::get_client().unwrap();
             let data = client
                 .input()
                 .get_analog_action_data(self.handle.get_u64().1, action_handle.get_u64().1);
@@ -106,7 +106,7 @@ pub mod input {
 
         #[napi]
         pub fn get_type(&self) -> InputType {
-            let client = crate::client::get_client();
+            let client = crate::client::get_client().unwrap();
             client
                 .input()
                 .get_input_type_for_handle(self.handle.get_u64().1)
@@ -121,7 +121,7 @@ pub mod input {
         /// Gets controller's motion sensors
         #[napi]
         pub fn get_motion_data(&self) -> MotionData {
-            let client = crate::client::get_client();
+            let client = crate::client::get_client().unwrap();
             return client
                 .input()
                 .get_motion_data(self.handle.get_u64().1)
@@ -154,7 +154,7 @@ pub mod input {
             action_set_handle: BigInt,
             analog_action_handle: BigInt,
         ) -> Vec<InputActionOrigins> {
-            let client = crate::client::get_client();
+            let client = crate::client::get_client().unwrap();
             let out = client.input().get_analog_action_origins(
                 self.handle.get_u64().1,
                 action_set_handle.get_u64().1,
@@ -169,7 +169,7 @@ pub mod input {
             action_set_handle: BigInt,
             digital_action_handle: BigInt,
         ) -> Vec<InputActionOrigins> {
-            let client = crate::client::get_client();
+            let client = crate::client::get_client().unwrap();
             let out = client.input().get_digital_action_origins(
                 self.handle.get_u64().1,
                 action_set_handle.get_u64().1,
@@ -702,13 +702,13 @@ pub mod input {
 
     #[napi]
     pub fn init() {
-        let client = crate::client::get_client();
+        let client = crate::client::get_client().unwrap();
         client.input().init(false);
     }
 
     #[napi]
     pub fn get_controllers() -> Vec<Controller> {
-        let client = crate::client::get_client();
+        let client = crate::client::get_client().unwrap();
         client
             .input()
             .get_connected_controllers()
@@ -722,25 +722,25 @@ pub mod input {
 
     #[napi]
     pub fn get_action_set(action_set_name: String) -> BigInt {
-        let client = crate::client::get_client();
+        let client = crate::client::get_client().unwrap();
         BigInt::from(client.input().get_action_set_handle(&action_set_name))
     }
 
     #[napi]
     pub fn get_digital_action(action_name: String) -> BigInt {
-        let client = crate::client::get_client();
+        let client = crate::client::get_client().unwrap();
         BigInt::from(client.input().get_digital_action_handle(&action_name))
     }
 
     #[napi]
     pub fn get_analog_action(action_name: String) -> BigInt {
-        let client = crate::client::get_client();
+        let client = crate::client::get_client().unwrap();
         BigInt::from(client.input().get_analog_action_handle(&action_name))
     }
 
     #[napi]
     pub fn shutdown() {
-        let client = crate::client::get_client();
+        let client = crate::client::get_client().unwrap();
         client.input().shutdown()
     }
 

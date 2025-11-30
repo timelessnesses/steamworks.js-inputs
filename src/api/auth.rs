@@ -21,7 +21,7 @@ pub mod auth {
     impl Ticket {
         #[napi]
         pub fn cancel(&mut self) {
-            let client = crate::client::get_client();
+            let client = crate::client::get_client().unwrap();
             client.user().cancel_authentication_ticket(self.handle);
         }
 
@@ -64,7 +64,7 @@ pub mod auth {
         network_identity: NetworkingIdentity,
         timeout_seconds: Option<u32>,
     ) -> Result<Ticket, Error> {
-        let client = crate::client::get_client();
+        let client = crate::client::get_client().unwrap();
         let (tx, rx) = oneshot::channel();
         let mut tx = Some(tx);
 
@@ -122,7 +122,7 @@ pub mod auth {
         identity: String,
         timeout_seconds: Option<u32>,
     ) -> Result<Ticket, Error> {
-        let client = crate::client::get_client();
+        let client = crate::client::get_client().unwrap();
         let (tx, rx) = oneshot::channel();
         let mut tx = Some(tx);
 

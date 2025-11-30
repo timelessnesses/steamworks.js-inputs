@@ -42,7 +42,7 @@ pub mod networking {
         send_type: SendType,
         data: Buffer,
     ) -> Result<bool, Error> {
-        let client = crate::client::get_client();
+        let client = crate::client::get_client().unwrap();
         let result = client.networking().send_p2p_packet(
             SteamId::from_raw(steam_id64.get_u64().1),
             match send_type {
@@ -58,7 +58,7 @@ pub mod networking {
 
     #[napi]
     pub fn is_p2p_packet_available() -> i32 {
-        let client = crate::client::get_client();
+        let client = crate::client::get_client().unwrap();
         client
             .networking()
             .is_p2p_packet_available()
@@ -67,7 +67,7 @@ pub mod networking {
 
     #[napi]
     pub fn read_p2p_packet(size: i32) -> Result<P2PPacket, Error> {
-        let client = crate::client::get_client();
+        let client = crate::client::get_client().unwrap();
         let mut buffer = vec![0; size as usize];
 
         client
@@ -88,7 +88,7 @@ pub mod networking {
 
     #[napi]
     pub fn accept_p2p_session(steam_id64: BigInt) {
-        let client = crate::client::get_client();
+        let client = crate::client::get_client().unwrap();
         client
             .networking()
             .accept_p2p_session(SteamId::from_raw(steam_id64.get_u64().1));
