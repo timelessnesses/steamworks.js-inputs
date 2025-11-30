@@ -4,6 +4,7 @@ export interface FriendInfo {
   smallAvatar?: Buffer
   mediumAvatar?: Buffer
   largeAvatar?: Buffer
+  id: bigint
 }
 
 export declare function init(appId?: number | undefined | null): void

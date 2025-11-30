@@ -45,6 +45,7 @@ const params = [
     '--platform',
     '--no-dts-header',
     '--dts', '../../client.d.ts',
+    '--release',
     '-o', relative,
     process.argv.slice(2).join(' ')
 ]
