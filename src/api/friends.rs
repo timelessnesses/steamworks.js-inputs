@@ -1,4 +1,4 @@
-use napi::bindgen_prelude::Buffer;
+use napi::bindgen_prelude::{BigInt, Buffer};
 use napi_derive::napi;
 
 #[napi(object)]
@@ -8,6 +8,7 @@ pub struct FriendInfo {
     pub small_avatar: Option<Buffer>,
     pub medium_avatar: Option<Buffer>,
     pub large_avatar: Option<Buffer>,
+    pub id: BigInt
 }
 
 impl From<steamworks::Friend> for FriendInfo {
@@ -24,6 +25,7 @@ impl From<steamworks::Friend> for FriendInfo {
             large_avatar: value.large_avatar().map(|i| {
                 Buffer::from(i)
             }),
+            id: BigInt::from(value.id().raw())
         }
     }
 }
