@@ -10,7 +10,7 @@ pub fn has_client() -> bool {
 }
 
 pub fn get_client() -> Result<Arc<Client>, &'static str> {
-    println!("Getting Steam client... Current strong count: {}", STEAM_CLIENT.lock().unwrap().as_ref().map_or(0, |arc| Arc::strong_count(arc)));
+    // println!("Getting Steam client... Current strong count: {}", STEAM_CLIENT.lock().unwrap().as_ref().map_or(0, |arc| Arc::strong_count(arc)));
     let option = STEAM_CLIENT.lock().unwrap().to_owned();
     option.ok_or_else(|| "Steam client's not initialized.")
 }
