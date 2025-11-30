@@ -14,11 +14,11 @@ export interface PlayerSteamId {
   accountId: number
 }
 
-export declare function requestUserInformation(steamId: bigint, requireNameOnly: boolean): FriendInfo
-
 export declare function restartAppIfNecessary(appId: number): boolean
 
 export declare function runCallbacks(): void
+
+export declare function shutdownClient(): void
 
 export declare namespace achievement {
   export function activate(achievement: string): boolean
@@ -94,6 +94,10 @@ export declare namespace cloud {
   export function readFile(name: string): string
   export function setEnabledForApp(enabled: boolean): void
   export function writeFile(name: string, content: string): boolean
+}
+
+export declare namespace friends {
+  export function requestUserInformation(steamId: bigint, requireNameOnly: boolean, timeoutSeconds?: number | undefined | null): Promise<FriendInfo>
 }
 
 export declare namespace input {

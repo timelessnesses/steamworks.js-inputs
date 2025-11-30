@@ -11,6 +11,7 @@ extern crate lazy_static;
 
 #[napi]
 pub fn init(app_id: Option<u32>) -> Result<(), Error> {
+    better_panic::Settings::debug().verbosity(better_panic::Verbosity::Full).most_recent_first(true).install();
     if client::has_client() {
         client::drop_client();
     }
@@ -40,6 +41,11 @@ pub fn restart_app_if_necessary(app_id: u32) -> bool {
 #[napi]
 pub fn run_callbacks() {
     client::get_client().run_callbacks();
+}
+
+#[napi]
+pub fn shutdown_client() {
+    client::drop_client();
 }
 
 pub mod api;
