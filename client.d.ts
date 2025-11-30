@@ -1,3 +1,11 @@
+export interface FriendInfo {
+  name: string
+  nickName?: string
+  smallAvatar?: Buffer
+  mediumAvatar?: Buffer
+  largeAvatar?: Buffer
+}
+
 export declare function init(appId?: number | undefined | null): void
 
 export interface PlayerSteamId {
@@ -5,6 +13,8 @@ export interface PlayerSteamId {
   steamId32: string
   accountId: number
 }
+
+export declare function requestUserInformation(steamId: bigint, requireNameOnly: boolean): FriendInfo
 
 export declare function restartAppIfNecessary(appId: number): boolean
 

@@ -1,0 +1,719 @@
+"controller_mappings"
+{
+	"version"		"3"
+	"revision"		"26"
+	"title"		"PS4 DualShock Default Controls"
+	"description"		"A configured controls for PS4 DualShock controllers, built in with Gyro for laser movements."
+	"creator"		"76561199213195978"
+	"progenitor"		"workshop://3588174372"
+	"url"		"workshop://3588174372"
+	"export_type"		"community"
+	"controller_type"		"controller_ps4"
+	"controller_caps"		"35085311"
+	"major_revision"		"0"
+	"minor_revision"		"0"
+	"Timestamp"		"1760646778"
+	"actions"
+	{
+		"gameplay"
+		{
+			"title"		"#Gameplay"
+			"legacy_set"		"0"
+			"StickPadGyro"
+			{
+				"laser_gyro"
+				{
+					"title"		"#LASER_GYRO"
+					"input_mode"		"joystick_move"
+				}
+				"laser_stick"
+				{
+					"title"		"#LASER_STICK"
+					"input_mode"		"joystick_move"
+				}
+			}
+			"AnalogTrigger"
+			{
+				"lane_1_trigger"		"#LANE_1"
+				"lane_2_trigger"		"#LANE_2"
+				"lane_3_trigger"		"#LANE_3"
+				"lane_4_trigger"		"#LANE_4"
+			}
+			"Button"
+			{
+				"pause"		"#PAUSE"
+				"lane_1"		"#LANE_1"
+				"lane_2"		"#LANE_2"
+				"lane_3"		"#LANE_3"
+				"lane_4"		"#LANE_4"
+				"up"		"#UP"
+				"Down"		"#DOWN"
+				"quick_retry"		"#QUICK_RETRY"
+				"SELECT"		"#SELECT"
+				"back"		"#BACK"
+			}
+		}
+		"visual_novel"
+		{
+			"title"		"#Visual_Novels"
+			"legacy_set"		"0"
+			"StickPadGyro"
+			{
+				"stick_left"
+				{
+					"title"		"#STICK_LEFT"
+					"input_mode"		"joystick_move"
+				}
+				"stick_right"
+				{
+					"title"		"#STICK_RIGHT"
+					"input_mode"		"joystick_move"
+				}
+			}
+			"Button"
+			{
+				"pause"		"#PAUSE"
+				"left"		"#LEFT"
+				"right"		"#RIGHT"
+				"SELECT"		"#SELECT"
+				"back"		"#BACK"
+			}
+		}
+	}
+	"action_layers"
+	{
+	}
+	"localization"
+	{
+		"english"
+		{
+			"gameplay"		"Gameplay"
+			"pause"		"Pause"
+			"lane_1"		"Lane 1"
+			"lane_2"		"Lane 2"
+			"lane_3"		"Lane 3"
+			"lane_4"		"Lane 4"
+			"up"		"Up"
+			"Down"		"Down"
+			"left"		"Left"
+			"right"		"Right"
+			"quick_retry"		"Quick Retry"
+			"laser_left"		"Laser Left (Trigger)"
+			"laser_right"		"Laser Right (Trigger)"
+			"laser_gyro"		"Laser (Gyro)"
+			"Song_Select"		"Song Select"
+			"SELECT"		"Select"
+			"back"		"Back"
+			"OPTIONS"		"Options"
+			"START"		"Start"
+			"Visual_Novels"		"Visual Novels"
+			"ANALOG_LEFT"		"Analog Left"
+			"ANALOG_RIGHT"		"Analog Right"
+			"SWITCH_TABS_LEFT"		"Switch Tabs Left"
+			"SWITCH_TABS_RIGHT"		"Switch Tabs Right"
+			"GYRO_TESTING"		"Gyro Testing"
+		}
+	}
+	"group"
+	{
+		"id"		"1"
+		"mode"		"four_buttons"
+		"name"		""
+		"description"		""
+		"inputs"
+		{
+		}
+	}
+	"group"
+	{
+		"id"		"2"
+		"mode"		"trigger"
+		"name"		""
+		"description"		""
+		"inputs"
+		{
+		}
+	}
+	"group"
+	{
+		"id"		"3"
+		"mode"		"trigger"
+		"name"		""
+		"description"		""
+		"inputs"
+		{
+		}
+	}
+	"group"
+	{
+		"id"		"5"
+		"mode"		"four_buttons"
+		"name"		""
+		"description"		""
+		"inputs"
+		{
+			"button_a"
+			{
+				"activators"
+				{
+					"Full_Press"
+					{
+						"bindings"
+						{
+							"binding"		"game_action visual_novel SELECT, Select, , "
+						}
+					}
+				}
+				"disabled_activators"
+				{
+				}
+			}
+			"button_b"
+			{
+				"activators"
+				{
+					"Full_Press"
+					{
+						"bindings"
+						{
+							"binding"		"game_action visual_novel back, Back, , "
+						}
+					}
+				}
+				"disabled_activators"
+				{
+				}
+			}
+		}
+	}
+	"group"
+	{
+		"id"		"6"
+		"mode"		"trigger"
+		"name"		""
+		"description"		""
+		"inputs"
+		{
+		}
+	}
+	"group"
+	{
+		"id"		"7"
+		"mode"		"trigger"
+		"name"		""
+		"description"		""
+		"inputs"
+		{
+		}
+	}
+	"group"
+	{
+		"id"		"15"
+		"mode"		"four_buttons"
+		"name"		""
+		"description"		""
+		"inputs"
+		{
+			"button_a"
+			{
+				"activators"
+				{
+					"Full_Press"
+					{
+						"bindings"
+						{
+							"binding"		"game_action gameplay SELECT, Select, , "
+						}
+					}
+				}
+				"disabled_activators"
+				{
+				}
+			}
+			"button_b"
+			{
+				"activators"
+				{
+					"Full_Press"
+					{
+						"bindings"
+						{
+							"binding"		"game_action gameplay back, Back, , "
+						}
+					}
+				}
+				"disabled_activators"
+				{
+				}
+			}
+		}
+	}
+	"group"
+	{
+		"id"		"23"
+		"mode"		"trigger"
+		"name"		""
+		"description"		""
+		"inputs"
+		{
+		}
+		"settings"
+		{
+			"virtual_mode"		"1"
+		}
+	}
+	"group"
+	{
+		"id"		"24"
+		"mode"		"trigger"
+		"name"		""
+		"description"		""
+		"inputs"
+		{
+		}
+		"settings"
+		{
+			"virtual_mode"		"1"
+		}
+	}
+	"group"
+	{
+		"id"		"25"
+		"mode"		"trigger"
+		"name"		""
+		"description"		""
+		"inputs"
+		{
+		}
+		"settings"
+		{
+			"virtual_mode"		"1"
+		}
+	}
+	"group"
+	{
+		"id"		"33"
+		"mode"		"joystick_move"
+		"name"		""
+		"description"		""
+		"inputs"
+		{
+		}
+		"settings"
+		{
+			"virtual_mode"		"1"
+		}
+		"gameactions"
+		{
+			"gameplay"		"laser_gyro"
+		}
+	}
+	"group"
+	{
+		"id"		"40"
+		"mode"		"joystick_move"
+		"name"		""
+		"description"		""
+		"inputs"
+		{
+		}
+		"settings"
+		{
+			"virtual_mode"		"1"
+		}
+		"gameactions"
+		{
+			"gameplay"		"laser_stick"
+		}
+	}
+	"group"
+	{
+		"id"		"46"
+		"mode"		"trigger"
+		"name"		""
+		"description"		""
+		"inputs"
+		{
+		}
+		"settings"
+		{
+			"virtual_mode"		"1"
+		}
+		"gameactions"
+		{
+			"gameplay"		"lane_1_trigger"
+		}
+	}
+	"group"
+	{
+		"id"		"47"
+		"mode"		"trigger"
+		"name"		""
+		"description"		""
+		"inputs"
+		{
+		}
+		"settings"
+		{
+			"virtual_mode"		"1"
+		}
+		"gameactions"
+		{
+			"gameplay"		"lane_4_trigger"
+		}
+	}
+	"group"
+	{
+		"id"		"48"
+		"mode"		"joystick_move"
+		"name"		""
+		"description"		""
+		"inputs"
+		{
+		}
+		"settings"
+		{
+			"virtual_mode"		"1"
+		}
+		"gameactions"
+		{
+			"gameplay"		"laser_stick"
+		}
+	}
+	"group"
+	{
+		"id"		"49"
+		"mode"		"dpad"
+		"name"		""
+		"description"		""
+		"inputs"
+		{
+			"dpad_north"
+			{
+				"activators"
+				{
+					"Full_Press"
+					{
+						"bindings"
+						{
+							"binding"		"game_action gameplay up, Up, , "
+						}
+					}
+				}
+				"disabled_activators"
+				{
+				}
+			}
+			"dpad_south"
+			{
+				"activators"
+				{
+					"Full_Press"
+					{
+						"bindings"
+						{
+							"binding"		"game_action gameplay Down, Down, , "
+						}
+					}
+				}
+				"disabled_activators"
+				{
+				}
+			}
+		}
+		"settings"
+		{
+			"requires_click"		"0"
+			"haptic_intensity_override"		"0"
+		}
+	}
+	"group"
+	{
+		"id"		"53"
+		"mode"		"joystick_move"
+		"name"		""
+		"description"		""
+		"inputs"
+		{
+		}
+		"settings"
+		{
+			"virtual_mode"		"1"
+		}
+		"gameactions"
+		{
+			"visual_novel"		"stick_left"
+		}
+	}
+	"group"
+	{
+		"id"		"54"
+		"mode"		"dpad"
+		"name"		""
+		"description"		""
+		"inputs"
+		{
+			"dpad_east"
+			{
+				"activators"
+				{
+					"Full_Press"
+					{
+						"bindings"
+						{
+							"binding"		"game_action visual_novel right, Right, , "
+						}
+					}
+				}
+				"disabled_activators"
+				{
+				}
+			}
+			"dpad_west"
+			{
+				"activators"
+				{
+					"Full_Press"
+					{
+						"bindings"
+						{
+							"binding"		"game_action visual_novel left, Left, , "
+						}
+					}
+				}
+				"disabled_activators"
+				{
+				}
+			}
+		}
+		"settings"
+		{
+			"requires_click"		"0"
+		}
+	}
+	"group"
+	{
+		"id"		"58"
+		"mode"		"trigger"
+		"name"		""
+		"description"		""
+		"inputs"
+		{
+		}
+		"settings"
+		{
+			"virtual_mode"		"1"
+		}
+		"gameactions"
+		{
+			"gameplay"		"lane_1_trigger"
+		}
+	}
+	"group"
+	{
+		"id"		"59"
+		"mode"		"trigger"
+		"name"		""
+		"description"		""
+		"inputs"
+		{
+		}
+		"settings"
+		{
+			"virtual_mode"		"1"
+		}
+		"gameactions"
+		{
+			"gameplay"		"lane_4_trigger"
+		}
+	}
+	"group"
+	{
+		"id"		"63"
+		"mode"		"dpad"
+		"name"		""
+		"description"		""
+		"inputs"
+		{
+			"dpad_east"
+			{
+				"activators"
+				{
+					"Full_Press"
+					{
+						"bindings"
+						{
+							"binding"		"game_action visual_novel right, Right, , "
+						}
+					}
+				}
+				"disabled_activators"
+				{
+				}
+			}
+			"dpad_west"
+			{
+				"activators"
+				{
+					"Full_Press"
+					{
+						"bindings"
+						{
+							"binding"		"game_action visual_novel left, Left, , "
+						}
+					}
+				}
+				"disabled_activators"
+				{
+				}
+			}
+		}
+		"settings"
+		{
+			"requires_click"		"0"
+			"haptic_intensity_override"		"0"
+		}
+	}
+	"group"
+	{
+		"id"		"0"
+		"mode"		"switches"
+		"name"		""
+		"description"		""
+		"inputs"
+		{
+			"button_escape"
+			{
+				"activators"
+				{
+					"Full_Press"
+					{
+						"bindings"
+						{
+							"binding"		"game_action gameplay pause, Pause, , "
+						}
+					}
+				}
+				"disabled_activators"
+				{
+				}
+			}
+			"button_menu"
+			{
+				"activators"
+				{
+					"Full_Press"
+					{
+						"bindings"
+						{
+							"binding"		"game_action gameplay quick_retry, Quick Retry, , "
+						}
+					}
+				}
+				"disabled_activators"
+				{
+				}
+			}
+			"left_bumper"
+			{
+				"activators"
+				{
+					"Full_Press"
+					{
+						"bindings"
+						{
+							"binding"		"game_action gameplay lane_2, Lane 2, , "
+						}
+					}
+				}
+				"disabled_activators"
+				{
+				}
+			}
+			"right_bumper"
+			{
+				"activators"
+				{
+					"Full_Press"
+					{
+						"bindings"
+						{
+							"binding"		"game_action gameplay lane_3, Lane 3, , "
+						}
+					}
+				}
+				"disabled_activators"
+				{
+				}
+			}
+		}
+	}
+	"group"
+	{
+		"id"		"4"
+		"mode"		"switches"
+		"name"		""
+		"description"		""
+		"inputs"
+		{
+			"button_escape"
+			{
+				"activators"
+				{
+					"Full_Press"
+					{
+						"bindings"
+						{
+							"binding"		"game_action visual_novel pause, Pause, , "
+						}
+					}
+				}
+				"disabled_activators"
+				{
+				}
+			}
+		}
+	}
+	"preset"
+	{
+		"id"		"0"
+		"name"		"gameplay"
+		"group_source_bindings"
+		{
+			"0"		"switch active"
+			"1"		"button_diamond inactive"
+			"15"		"button_diamond active"
+			"2"		"left_trigger inactive"
+			"25"		"left_trigger inactive"
+			"47"		"left_trigger inactive"
+			"58"		"left_trigger active"
+			"3"		"right_trigger inactive"
+			"23"		"right_trigger inactive"
+			"24"		"right_trigger inactive"
+			"46"		"right_trigger inactive"
+			"59"		"right_trigger active"
+			"33"		"gyro active"
+			"40"		"joystick active"
+			"48"		"right_joystick active"
+			"49"		"dpad active"
+		}
+	}
+	"preset"
+	{
+		"id"		"1"
+		"name"		"visual_novel"
+		"group_source_bindings"
+		{
+			"4"		"switch active"
+			"5"		"button_diamond active"
+			"6"		"left_trigger active"
+			"7"		"right_trigger active"
+			"53"		"joystick inactive"
+			"54"		"joystick active"
+			"63"		"dpad active"
+		}
+	}
+	"settings"
+	{
+	}
+}

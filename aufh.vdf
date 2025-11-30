@@ -1,0 +1,116 @@
+"Action Manifest"
+{
+    "configurations"
+    {
+        "controller_ps4"
+        {
+            "0"
+            {
+                "path" "controllers/ps4_default.vdf"
+            }
+        }
+    }
+	"actions"
+	{
+		"gameplay"
+        {
+            "title" "#Gameplay"
+            "Button"
+            {   
+                "pause"       "#PAUSE"
+                "lane_1"      "#LANE_1"
+                "lane_2"      "#LANE_2"
+                "lane_3"      "#LANE_3"
+                "lane_4"      "#LANE_4"
+                "up"          "#UP"
+                "down"        "#DOWN"
+                "quick_retry" "#QUICK_RETRY"
+                "select"      "#SELECT"
+                "back"        "#BACK"
+            }   
+        "AnalogTrigger"
+        {
+            "lane_1_trigger"  "#LANE_1"
+            "lane_2_trigger"  "#LANE_2"
+            "lane_3_trigger"  "#LANE_3"
+            "lane_4_trigger"  "#LANE_4"
+        }
+        "StickPadGyro"
+        {
+            "laser_gyro"
+            {
+                "title" "#LASER_GYRO"
+                "input_mode" "joystick_move"
+            }
+            "laser_stick"
+            {
+                "title" "#LASER_STICK"
+                "input_mode" "joystick_move"
+            }
+        }
+    }
+
+        "visual_novel"
+        {
+            "title" "#Visual_Novels"
+            "Button"
+            {
+                "pause"  "#PAUSE"
+                "left"   "#LEFT"
+                "right"  "#RIGHT"
+                "select" "#SELECT"
+                "back"   "#BACK"
+            }
+            "StickPadGyro"
+            {
+                "stick_left"
+                {
+                    "title" "#STICK_LEFT"
+                    "input_mode" "joystick_move"
+                }
+                "stick_right"
+                {
+                    "title" "#STICK_RIGHT"
+                    "input_mode" "joystick_move"
+                }
+            }
+        }
+	}
+
+	"localization"
+	{
+		"english"
+		{
+			"Gameplay"             "Gameplay"
+			"PAUSE"                "Pause"
+			"LANE_1"               "Lane 1"
+			"LANE_2"               "Lane 2"
+			"LANE_3"               "Lane 3"
+			"LANE_4"               "Lane 4"
+			"UP"                   "Up"
+			"DOWN"                 "Down"
+			"LEFT"                 "Left"
+			"RIGHT"                "Right"
+			"QUICK_RETRY"          "Quick Retry"
+
+			"LASER_LEFT"           "Laser Left (Trigger)"
+			"LASER_RIGHT"          "Laser Right (Trigger)"
+			"LASER_GYRO"           "Laser (Gyro)"
+
+			"Song_Select"          "Song Select"
+			"SELECT"               "Select"
+			"BACK"                 "Back"
+			"OPTIONS"              "Options"
+			"START"                "Start"
+
+			"Visual_Novels"        "Visual Novels"
+			"ANALOG_LEFT"          "Analog Left"
+			"ANALOG_RIGHT"         "Analog Right"
+
+			"Options"              "Options"
+			"SWITCH_TABS_LEFT"     "Switch Tabs Left"
+			"SWITCH_TABS_RIGHT"    "Switch Tabs Right"
+			"GYRO_TESTING"         "Gyro Testing"
+		}
+	}
+}
