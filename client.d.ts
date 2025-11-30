@@ -18,6 +18,10 @@ export declare function restartAppIfNecessary(appId: number): boolean
 
 export declare function runCallbacks(): void
 
+/**
+ * Shutdown the Steam client instance
+ * PLEASE DON'T USE THIS. Use [`shutdown`] instead.
+ */
 export declare function shutdownClient(): void
 
 export declare namespace achievement {

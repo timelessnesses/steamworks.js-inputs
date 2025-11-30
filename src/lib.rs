@@ -43,8 +43,11 @@ pub fn run_callbacks() {
     client::get_client().unwrap().run_callbacks();
 }
 
+/// Shutdown the Steam client instance
+/// PLEASE DON'T USE THIS. Use [`shutdown`] instead.
 #[napi]
 pub fn shutdown_client() {
+    client::get_client().unwrap();
     client::drop_client();
 }
 

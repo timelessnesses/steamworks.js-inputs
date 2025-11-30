@@ -37,6 +37,15 @@ module.exports.init = (appId) => {
 }
 
 /**
+ * @description Shuts down the steam client
+ */
+module.exports.shutdown = () => { 
+    clearInterval(runCallbacksInterval)
+    nativeBinding.shutdownClient()
+    runCallbacksInterval = undefined
+}
+
+/**
  * @param {number} appId - App ID of the game to load
  * {@link https://partner.steamgames.com/doc/api/steam_api#SteamAPI_RestartAppIfNecessary}
  * @returns {boolean} 

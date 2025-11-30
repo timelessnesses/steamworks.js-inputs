@@ -1,4 +1,5 @@
 export function init(appId?: number): Omit<Client, "init" | "runCallbacks">;
+export function shutdown(): void;
 export function restartAppIfNecessary(appId: number): boolean;
 export function electronEnableSteamOverlay(disableEachFrameInvalidation?: boolean): void;
 export type Client = typeof import("./client.d");

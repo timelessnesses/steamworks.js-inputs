@@ -1,4 +1,4 @@
-const { init, shutdownClient } = require('../index.js')
+const { init, shutdown } = require('../index.js')
 const client = init(480);
 
 const timmy = client.friends.requestUserInformation(BigInt("76561199213195978"), true, 5).then(user => {
@@ -12,4 +12,4 @@ const whoeverthisis = client.friends.requestUserInformation(BigInt("765611983446
 
 console.log(timmy);
 console.log(whoeverthisis);
-client.shutdownClient();
+shutdown();
