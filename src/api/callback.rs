@@ -3,8 +3,8 @@ use napi_derive::napi;
 #[napi]
 pub mod callback {
     use napi::{
-        threadsafe_function::{ThreadsafeFunction, ThreadsafeFunctionCallMode},
         bindgen_prelude::Function,
+        threadsafe_function::{ThreadsafeFunction, ThreadsafeFunctionCallMode},
     };
 
     #[napi]
@@ -41,13 +41,18 @@ pub mod callback {
         #[napi(ts_arg_type = "C")] steam_callback: SteamCallback,
         #[napi(ts_arg_type = "(value: import('./callbacks').CallbackReturns[C]) => void")] handler: Function<'static>,
     ) -> Handle {
-        let threadsafe_handler: ThreadsafeFunction<serde_json::Value, napi::Unknown<'_>, Vec<serde_json::Value>, napi::Status, false> =
-            handler
-                .build_threadsafe_function::<serde_json::Value>()
-                .callee_handled::<false>()
-                .max_queue_size::<0>()
-                .build_callback(|ctx| Ok(vec![ctx.value]))
-                .unwrap();
+        let threadsafe_handler: ThreadsafeFunction<
+            serde_json::Value,
+            napi::Unknown<'_>,
+            Vec<serde_json::Value>,
+            napi::Status,
+            false,
+        > = handler
+            .build_threadsafe_function::<serde_json::Value>()
+            .callee_handled::<false>()
+            .max_queue_size::<0>()
+            .build_callback(|ctx| Ok(vec![ctx.value]))
+            .unwrap();
 
         let handle = match steam_callback {
             SteamCallback::PersonaStateChange => {
@@ -88,7 +93,13 @@ pub mod callback {
     }
 
     fn register_callback<C>(
-        threadsafe_handler: ThreadsafeFunction<serde_json::Value, napi::Unknown<'_>, Vec<serde_json::Value>, napi::Status, false>,
+        threadsafe_handler: ThreadsafeFunction<
+            serde_json::Value,
+            napi::Unknown<'_>,
+            Vec<serde_json::Value>,
+            napi::Status,
+            false,
+        >,
     ) -> steamworks::CallbackHandle
     where
         C: steamworks::Callback + serde::Serialize,

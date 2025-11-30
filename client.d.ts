@@ -88,7 +88,7 @@ export declare namespace cloud {
 
 export declare namespace input {
   export class Controller {
-    activateActionSet(actionSetHandle: bigint): void
+    activateActionSet(actionSetHandle: bigint): boolean
     isDigitalActionPressed(actionHandle: bigint): boolean
     getAnalogActionVector(actionHandle: bigint): AnalogActionVector
     getType(): InputType
@@ -105,7 +105,6 @@ export declare namespace input {
     getDigitalActionOrigins(actionSetHandle: bigint, digitalActionHandle: bigint): Array<InputActionOrigins>
     getCurrentActiveActionSet(): bigint
   }
-  export function activateActionSetAll(actionSetHandle: bigint): void
   export interface AnalogActionVector {
     x: number
     y: number

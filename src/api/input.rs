@@ -48,14 +48,6 @@ pub mod input {
     }
 
     #[napi]
-    pub fn activate_action_set_all(action_set_handle: BigInt) {
-        let client = crate::client::get_client();
-        client
-            .input()
-            .activate_action_set_handle(u64::MAX ,action_set_handle.get_u64().1)
-    }
-
-    #[napi]
     pub fn get_action_handle(action_name: String) -> BigInt {
         let client = crate::client::get_client();
         BigInt::from(client.input().get_action_set_handle(&action_name))
@@ -64,7 +56,9 @@ pub mod input {
     #[napi]
     pub fn get_file_path_for_action(action_handle: InputActionOrigins) -> String {
         let client = crate::client::get_client();
-        client.input().get_glyph_for_action_origin(action_handle.into())
+        client
+            .input()
+            .get_glyph_for_action_origin(action_handle.into())
     }
 
     #[napi]
@@ -81,11 +75,12 @@ pub mod input {
     #[napi]
     impl Controller {
         #[napi]
-        pub fn activate_action_set(&self, action_set_handle: BigInt) {
+        pub fn activate_action_set(&self, action_set_handle: BigInt) -> bool {
             let client = crate::client::get_client();
             client
                 .input()
-                .activate_action_set_handle(self.handle.get_u64().1, action_set_handle.get_u64().1)
+                .activate_action_set_handle(self.handle.get_u64().1, action_set_handle.get_u64().1);
+            self.get_current_active_action_set().get_u64().1 == action_set_handle.get_u64().1
         }
 
         #[napi]
@@ -137,24 +132,49 @@ pub mod input {
         /// It has intensity from 0 (off) to 65535 (max)
         /// use something like `setTimeout` to make a timed vibration
         #[napi]
-        pub fn trigger_vibration(&self, left_speed_micro_second: u16, right_speed_micro_second: u16) {
+        pub fn trigger_vibration(
+            &self,
+            left_speed_micro_second: u16,
+            right_speed_micro_second: u16,
+        ) {
             unsafe {
                 let x = steamworks::sys::SteamAPI_SteamInput_v006();
-                steamworks::sys::SteamAPI_ISteamInput_TriggerVibration(x, self.handle.get_u64().1, left_speed_micro_second, right_speed_micro_second);
+                steamworks::sys::SteamAPI_ISteamInput_TriggerVibration(
+                    x,
+                    self.handle.get_u64().1,
+                    left_speed_micro_second,
+                    right_speed_micro_second,
+                );
             }
         }
 
         #[napi]
-        pub fn get_analog_action_origins(&self, action_set_handle: BigInt, analog_action_handle: BigInt) -> Vec<InputActionOrigins> {
+        pub fn get_analog_action_origins(
+            &self,
+            action_set_handle: BigInt,
+            analog_action_handle: BigInt,
+        ) -> Vec<InputActionOrigins> {
             let client = crate::client::get_client();
-            let out = client.input().get_analog_action_origins(self.handle.get_u64().1, action_set_handle.get_u64().1, analog_action_handle.get_u64().1);
+            let out = client.input().get_analog_action_origins(
+                self.handle.get_u64().1,
+                action_set_handle.get_u64().1,
+                analog_action_handle.get_u64().1,
+            );
             out.iter().map(|i| InputActionOrigins::from(*i)).collect()
         }
 
         #[napi]
-        pub fn get_digital_action_origins(&self, action_set_handle: BigInt, digital_action_handle: BigInt) -> Vec<InputActionOrigins> {
+        pub fn get_digital_action_origins(
+            &self,
+            action_set_handle: BigInt,
+            digital_action_handle: BigInt,
+        ) -> Vec<InputActionOrigins> {
             let client = crate::client::get_client();
-            let out = client.input().get_digital_action_origins(self.handle.get_u64().1, action_set_handle.get_u64().1, digital_action_handle.get_u64().1);
+            let out = client.input().get_digital_action_origins(
+                self.handle.get_u64().1,
+                action_set_handle.get_u64().1,
+                digital_action_handle.get_u64().1,
+            );
             out.iter().map(|i| InputActionOrigins::from(*i)).collect()
         }
 
@@ -162,7 +182,11 @@ pub mod input {
         pub fn get_current_active_action_set(&self) -> BigInt {
             unsafe {
                 let x = steamworks::sys::SteamAPI_SteamInput_v006();
-                steamworks::sys::SteamAPI_ISteamInput_GetCurrentActionSet(x, self.handle.get_u64().1).into()
+                steamworks::sys::SteamAPI_ISteamInput_GetCurrentActionSet(
+                    x,
+                    self.handle.get_u64().1,
+                )
+                .into()
             }
         }
     }
@@ -170,7 +194,7 @@ pub mod input {
     #[napi]
     pub enum VibrateSide {
         Left,
-        Right
+        Right,
     }
 
     /// The conversion will return 32767 if the value is not found
@@ -594,11 +618,15 @@ pub mod input {
 
     impl From<steamworks::sys::EInputActionOrigin> for InputActionOrigins {
         fn from(input_action_origin: steamworks::sys::EInputActionOrigin) -> InputActionOrigins {
-            debug_assert_eq!(std::mem::size_of::<steamworks::sys::EInputActionOrigin>(),
-                             std::mem::size_of::<InputActionOrigins>());
+            debug_assert_eq!(
+                std::mem::size_of::<steamworks::sys::EInputActionOrigin>(),
+                std::mem::size_of::<InputActionOrigins>()
+            );
             unsafe {
                 if (0..=409).contains(&(input_action_origin as usize)) {
-                    return std::mem::transmute::<i32, InputActionOrigins>(input_action_origin as i32);
+                    return std::mem::transmute::<i32, InputActionOrigins>(
+                        input_action_origin as i32,
+                    );
                 } else {
                     return InputActionOrigins::Count;
                 }
@@ -608,11 +636,16 @@ pub mod input {
 
     impl Into<steamworks::sys::EInputActionOrigin> for InputActionOrigins {
         fn into(self) -> steamworks::sys::EInputActionOrigin {
-            debug_assert_eq!(std::mem::size_of::<steamworks::sys::EInputActionOrigin>(),
-                             std::mem::size_of::<InputActionOrigins>());
+            debug_assert_eq!(
+                std::mem::size_of::<steamworks::sys::EInputActionOrigin>(),
+                std::mem::size_of::<InputActionOrigins>()
+            );
             unsafe {
                 if (0..=409).contains(&(self as usize)) {
-                    return std::mem::transmute::<InputActionOrigins, steamworks::sys::EInputActionOrigin>(self);
+                    return std::mem::transmute::<
+                        InputActionOrigins,
+                        steamworks::sys::EInputActionOrigin,
+                    >(self);
                 } else {
                     return steamworks::sys::EInputActionOrigin::k_EInputActionOrigin_Count;
                 }
@@ -681,10 +714,8 @@ pub mod input {
             .get_connected_controllers()
             .into_iter()
             .filter(|identity| identity != &0)
-            .map(|identity| {
-                Controller {
-                    handle: BigInt::from(identity),
-                }
+            .map(|identity| Controller {
+                handle: BigInt::from(identity),
             })
             .collect()
     }
@@ -718,8 +749,12 @@ pub mod input {
         let path = CString::new(path).map_err(|a| napi::Error::from_reason(a.to_string()))?;
         unsafe {
             let x = steamworks::sys::SteamAPI_SteamInput_v006();
-            return Ok(steamworks::sys::SteamAPI_ISteamInput_SetInputActionManifestFilePath(x, path.as_ptr()));
+            return Ok(
+                steamworks::sys::SteamAPI_ISteamInput_SetInputActionManifestFilePath(
+                    x,
+                    path.as_ptr(),
+                ),
+            );
         }
-
     }
 }

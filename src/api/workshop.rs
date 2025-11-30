@@ -204,9 +204,12 @@ pub mod workshop {
         update_details: UgcUpdate,
         app_id: Option<u32>,
 
-        #[napi(ts_arg_type = "(data: UgcResult) => void")] success_callback: napi::bindgen_prelude::Function<'static>,
+        #[napi(ts_arg_type = "(data: UgcResult) => void")]
+        success_callback: napi::bindgen_prelude::Function<'static>,
 
-        #[napi(ts_arg_type = "(err: any) => void")] error_callback: napi::bindgen_prelude::Function<'static>,
+        #[napi(ts_arg_type = "(err: any) => void")] error_callback: napi::bindgen_prelude::Function<
+            'static,
+        >,
 
         #[napi(ts_arg_type = "(data: UpdateProgress) => void")] progress_callback: Option<
             napi::bindgen_prelude::Function<'static>,
@@ -214,13 +217,12 @@ pub mod workshop {
 
         progress_callback_interval_ms: Option<u32>,
     ) {
-        let success_callback =
-            success_callback
-                .build_threadsafe_function::<UgcResult>()
-                .callee_handled::<false>()
-                .max_queue_size::<0>()
-                .build_callback(|ctx| Ok(vec![ctx.value]))
-                .unwrap();
+        let success_callback = success_callback
+            .build_threadsafe_function::<UgcResult>()
+            .callee_handled::<false>()
+            .max_queue_size::<0>()
+            .build_callback(|ctx| Ok(vec![ctx.value]))
+            .unwrap();
         let error_callback = error_callback
             .build_threadsafe_function::<Error>()
             .callee_handled::<false>()
@@ -256,13 +258,12 @@ pub mod workshop {
             });
 
             if let Some(progress_callback) = progress_callback {
-                let progress_callback =
-                    progress_callback
-                        .build_threadsafe_function::<UpdateProgress>()
-                        .callee_handled::<false>()
-                        .max_queue_size::<0>()
-                        .build_callback(|ctx| Ok(vec![ctx.value]))
-                        .unwrap();
+                let progress_callback = progress_callback
+                    .build_threadsafe_function::<UpdateProgress>()
+                    .callee_handled::<false>()
+                    .max_queue_size::<0>()
+                    .build_callback(|ctx| Ok(vec![ctx.value]))
+                    .unwrap();
 
                 std::thread::spawn(move || loop {
                     let (status, progress, total) = update_watch_handle.progress();
@@ -417,13 +418,13 @@ pub mod workshop {
     pub async fn delete_item(item_id: BigInt) -> Result<(), Error> {
         let client = crate::client::get_client();
         let (tx, rx) = oneshot::channel();
-    
+
         client
             .ugc()
             .delete_item(PublishedFileId(item_id.get_u64().1), |result| {
                 tx.send(result).unwrap();
             });
-    
+
         let result = rx.await.unwrap();
         match result {
             Ok(()) => Ok(()),

@@ -1,7 +1,7 @@
 const path = require('path')
 const { init } = require('../index.js')
 
-const client = init(2234234)
+const client = init(3782120)
 
 const manifestPath = path.join(__dirname, '../aufh.vdf')
 console.log('Using manifest:', manifestPath)
@@ -28,6 +28,8 @@ setInterval(() => {
 
     const controllers = client.input.getControllers()
     console.log('Controllers: ' + controllers.length)
+
+    if (!controllers[0].activateActionSet(client.input.getActionSet("visual_novel"))) throw new Error("failed to switch to visual novel")
 
     controllers.forEach(controller => {
         if (controller.getHandle() === 0n) return
