@@ -31,7 +31,10 @@ module.exports.init = (appId) => {
     internalInit(appId)
 
     clearInterval(runCallbacksInterval)
-    runCallbacksInterval = setInterval(runCallbacks, 1000 / 30)
+    runCallbacksInterval = setInterval(() => {
+        // console.log("Running callbacks")
+        runCallbacks()
+    }, 1000 / 120)
 
     return api
 }
