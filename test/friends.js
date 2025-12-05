@@ -5,11 +5,15 @@ const timmy = client.friends.requestUserInformation(BigInt("76561199213195978"),
     console.log(user);
     return user;
 });
-const whoeverthisis = client.friends.requestUserInformation(BigInt("76561198344665803"), true, 5).then(user => {
+const whoeverthisis = client.friends.requestUserInformation(BigInt("76561198378386272"), true, 100).then(user => {
     console.log(user);
     return user;
 });
 
 console.log(timmy);
 console.log(whoeverthisis);
-shutdown();
+
+setTimeout(() => {
+    console.log("Shutting down");
+    shutdown();
+}, 15000);

@@ -11,7 +11,10 @@ extern crate lazy_static;
 
 #[napi]
 pub fn init(app_id: Option<u32>) -> Result<(), Error> {
-    better_panic::Settings::debug().verbosity(better_panic::Verbosity::Full).most_recent_first(true).install();
+    better_panic::Settings::debug()
+        .verbosity(better_panic::Verbosity::Full)
+        .most_recent_first(true)
+        .install();
     if client::has_client() {
         client::drop_client();
     }

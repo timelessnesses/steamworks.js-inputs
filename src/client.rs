@@ -29,7 +29,7 @@ pub fn drop_client() {
         match Arc::try_unwrap(arc) {
             Ok(client) => {
                 drop(client);
-            },
+            }
             Err(arc) => {
                 println!("Warning: Tried to drop Steam client but there are still {} strong references to it.", Arc::strong_count(&arc));
                 *client_ref = Some(arc);
