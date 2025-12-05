@@ -26,13 +26,13 @@ impl From<steamworks::Friend> for FriendInfo {
 
 #[napi]
 pub mod friends {
-    use core::panic;
+    
     use std::ops::{Deref, DerefMut};
 
     use crate::api::friends::pretty_panic_but_not_panic;
 
     use super::FriendInfo;
-    use napi::{Env, Error, bindgen_prelude::{BigInt, JsObjectValue}};
+    use napi::{Error, bindgen_prelude::BigInt};
     use steamworks::{CallbackHandle, PersonaStateChange};
     use tokio::sync::oneshot;
 
