@@ -21,9 +21,11 @@
         "README.md"
     ],
     "license": "MIT",
+    "dependencies": {
+        "@types/node": "*"
+    },
     "devDependencies": {
         "@napi-rs/cli": "3.3.1",
-        "@types/node": "*",
         "electron": "24.2.0",
         "rimraf": "6.0.1",
         "typescript": "5.5.3"
