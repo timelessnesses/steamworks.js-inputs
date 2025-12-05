@@ -103,7 +103,7 @@ pub mod friends {
             println!("Done waiting for callback for {}", steam_id.steamid32());
             println!("Result for ID {}: {:?}", steam_id.steamid32(), result);
             drop(callback);
-            pretty_panic_but_not_panic("hiiii");
+            // pretty_panic_but_not_panic("hiiii");
             match result {
                 Err(_) => {
                     // panic!("timeout waiting for {}'s persona state change", steam_id.steamid32());
