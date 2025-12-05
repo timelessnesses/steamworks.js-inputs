@@ -5,7 +5,7 @@ const timmy = client.friends.requestUserInformation(BigInt("76561199213195978"),
     console.log(user);
     return user;
 });
-const whoeverthisis = client.friends.requestUserInformation(BigInt("76561198378386272"), true, 100).then(user => {
+const whoeverthisis = client.friends.requestUserInformation(BigInt("76561198116879965"), true, 1).then(user => {
     console.log(user);
     return user;
 });

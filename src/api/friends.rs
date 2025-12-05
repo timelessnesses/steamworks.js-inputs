@@ -29,6 +29,8 @@ pub mod friends {
     use core::panic;
     use std::ops::{Deref, DerefMut};
 
+    use crate::api::friends::pretty_panic_but_not_panic;
+
     use super::FriendInfo;
     use napi::{bindgen_prelude::BigInt, Error};
     use steamworks::{CallbackHandle, PersonaStateChange};
@@ -101,15 +103,25 @@ pub mod friends {
             println!("Done waiting for callback for {}", steam_id.steamid32());
             println!("Result for ID {}: {:?}", steam_id.steamid32(), result);
             drop(callback);
+            pretty_panic_but_not_panic("hiiii");
             match result {
                 Err(_) => {
-                    panic!("timeout waiting for {}'s persona state change", steam_id.steamid32());
+                    // panic!("timeout waiting for {}'s persona state change", steam_id.steamid32());
+                    pretty_panic_but_not_panic(&format!(
+                        "timeout waiting for {}'s persona state change",
+                        steam_id.steamid32()
+                    ));
                     return Err(napi::Error::from_reason(
                         "Steam did not callback in time".to_string(),
                     ))
                 }
                 Ok(Err(e)) => {
-                    panic!("oneshot receive error for {}: {}", steam_id.steamid32(), e);
+                    // panic!("oneshot receive error for {}: {}", steam_id.steamid32(), e);
+                    pretty_panic_but_not_panic(&format!(
+                        "oneshot receive error for {}: {}",
+                        steam_id.steamid32(),
+                        e
+                    ));
                     return Err(napi::Error::from_reason(format!(
                         "Failed to receive persona state change: {}",
                         e
@@ -128,4 +140,10 @@ pub mod friends {
             Ok(client.friends().get_friend(steam_id).into())
         }
     }
+}
+
+fn pretty_panic_but_not_panic(msg: &str) {
+    let _ = std::panic::catch_unwind(|| {
+        panic!("{}", msg)
+    });
 }
