@@ -41,7 +41,6 @@ jobs:
               uses: actions/setup-node@v4
               with:
                   node-version: 22.x
-                  registry-url: 'https://npm.pkg.github.com'
 
             # ubuntu:20.04 does not have curl and gcc/g++ installed by default
             - run: apt-get update && apt-get install -y curl build-essential
@@ -77,7 +76,6 @@ jobs:
               uses: actions/setup-node@v4
               with:
                   node-version: 22.x
-                  registry-url: 'https://npm.pkg.github.com'
 
             - name: Setup Rust
               uses: dtolnay/rust-toolchain@stable
@@ -113,7 +111,6 @@ jobs:
               uses: actions/setup-node@v4
               with:
                   node-version: 22.x
-                  registry-url: 'https://npm.pkg.github.com'
 
             - name: Setup Rust
               uses: dtolnay/rust-toolchain@stable
@@ -157,9 +154,10 @@ jobs:
                   echo "- Root directory:" && ls
                   echo "- Dist directory:" && ls -R dist
 
+            - name: Properly installing dependencies (I don't know why)
+              run: npm ci
+
             - name: Publish to npm
-              run: | 
-                npm ci
-                npm publish
-              env:
-                NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+              uses: JS-DevTools/npm-publish@v4
+              with:
+                  token: ${{ secrets.NPM_TOKEN }}
