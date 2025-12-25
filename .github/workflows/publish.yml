@@ -9,6 +9,9 @@ env:
     DEBUG: 'napi:*'
     MACOSX_DEPLOYMENT_TARGET: '10.13'
 
+permissions:
+  id-token: write
+
 jobs:
     check:
         runs-on: ubuntu-latest
@@ -153,11 +156,5 @@ jobs:
               run: |
                   echo "- Root directory:" && ls
                   echo "- Dist directory:" && ls -R dist
-
-            - name: Properly installing dependencies (I don't know why)
-              run: npm ci
-
-            - name: Publish to npm
-              uses: JS-DevTools/npm-publish@v4
-              with:
-                  token: ${{ secrets.NPM_TOKEN }}
+            
+            - run: npm publish
