@@ -4,7 +4,8 @@ use napi_derive::napi;
 pub mod input {
     use std::ffi::CString;
 
-    use napi::bindgen_prelude::BigInt;
+    use napi::bindgen_prelude::{BigInt, Function};
+    use steamworks::FloatingGamepadTextInputMode;
 
     #[napi(string_enum)]
     pub enum InputType {
@@ -736,6 +737,48 @@ pub mod input {
     pub fn get_analog_action(action_name: String) -> BigInt {
         let client = crate::client::get_client().unwrap();
         BigInt::from(client.input().get_analog_action_handle(&action_name))
+    }
+
+    #[napi]
+    #[repr(i32)]
+    #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
+    pub enum KeyboardInputKind {
+        /// The text input that will closes on Enter keypress
+        SingleLine,
+        /// Text input that will closes on user's demand.
+        MultiLine,
+        /// Text input that will make typing email address easier.
+        Email,
+        /// Text input that will make typing numeric input easier.
+        Numeric,
+    }
+
+    impl Into<FloatingGamepadTextInputMode> for KeyboardInputKind {
+        fn into(self) -> FloatingGamepadTextInputMode {
+            match self {
+                KeyboardInputKind::SingleLine => FloatingGamepadTextInputMode::SingleLine,
+                KeyboardInputKind::MultiLine => FloatingGamepadTextInputMode::MultipleLines,
+                KeyboardInputKind::Email => FloatingGamepadTextInputMode::Email,
+                KeyboardInputKind::Numeric => FloatingGamepadTextInputMode::Numeric,
+            }
+        }
+    }
+
+
+    /// Opens a floating keyboard over the game content and sends OS keyboard keys directly to the game.
+    /// The text field position is specified in pixels relative the origin of the game window and is used to position the floating keyboard in a way that doesn't cover the text field.
+    #[napi]
+    pub fn trigger_on_screen_keyboard(keyboard_input_kind: KeyboardInputKind, x_pos_of_text_input: i32, y_pos_of_text_input: i32, width_of_text_input: i32, height_of_text_input: i32, dismissed_callback: Option<Function<'static>>) -> bool {
+        let client = crate::client::get_client().unwrap();
+        let out: Box<dyn FnMut() + Send + 'static> = if let Some(cb) = dismissed_callback {
+            let threadsafe = cb.build_threadsafe_function().build_callback(|_| Ok(())).unwrap();
+            Box::new(move || {
+                threadsafe.call((), napi::threadsafe_function::ThreadsafeFunctionCallMode::NonBlocking);
+            })
+        } else {
+            Box::new(|| {})
+        };
+        client.utils().show_floating_gamepad_text_input(keyboard_input_kind.into(), x_pos_of_text_input, y_pos_of_text_input, width_of_text_input, height_of_text_input, out)
     }
 
     #[napi]
