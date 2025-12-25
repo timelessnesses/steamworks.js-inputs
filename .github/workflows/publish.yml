@@ -156,5 +156,9 @@ jobs:
               run: |
                   echo "- Root directory:" && ls
                   echo "- Dist directory:" && ls -R dist
-            
+            - uses: actions/setup-node@v4
+              with:
+                node-version: '24'
+                registry-url: 'https://registry.npmjs.org'
+            - run: npm ci
             - run: npm publish
