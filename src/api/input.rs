@@ -764,23 +764,6 @@ pub mod input {
         }
     }
 
-
-    /// Opens a floating keyboard over the game content and sends OS keyboard keys directly to the game.
-    /// The text field position is specified in pixels relative the origin of the game window and is used to position the floating keyboard in a way that doesn't cover the text field.
-    #[napi]
-    pub fn trigger_on_screen_keyboard(keyboard_input_kind: KeyboardInputKind, x_pos_of_text_input: i32, y_pos_of_text_input: i32, width_of_text_input: i32, height_of_text_input: i32, dismissed_callback: Option<Function<'static>>) -> bool {
-        let client = crate::client::get_client().unwrap();
-        let out: Box<dyn FnMut() + Send + 'static> = if let Some(cb) = dismissed_callback {
-            let threadsafe = cb.build_threadsafe_function().build_callback(|_| Ok(())).unwrap();
-            Box::new(move || {
-                threadsafe.call((), napi::threadsafe_function::ThreadsafeFunctionCallMode::NonBlocking);
-            })
-        } else {
-            Box::new(|| {})
-        };
-        client.utils().show_floating_gamepad_text_input(keyboard_input_kind.into(), x_pos_of_text_input, y_pos_of_text_input, width_of_text_input, height_of_text_input, out)
-    }
-
     #[napi]
     pub fn shutdown() {
         let client = crate::client::get_client().unwrap();

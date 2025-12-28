@@ -1,6 +1,6 @@
 {
     "name": "steamworks.js-timmy",
-    "version": "0.1.19",
+    "version": "0.1.20",
     "main": "index.js",
     "types": "index.d.ts",
     "napi": {
@@ -35,8 +35,8 @@
     },
     "scripts": {
         "build": "npm run types && node build --release",
-        "prepare": "npm run build",
-        "build:debug": "node build",
+        "prepare": "npm run build:debug",
+        "build:debug": "npm run types && node build",
         "prune": "rimraf dist target client.d.ts",
         "format": "cargo clippy --fix --allow-staged && cargo fmt",
         "types": "tsc index.js --allowJs --declaration --emitDeclarationOnly"

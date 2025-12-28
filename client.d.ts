@@ -567,6 +567,16 @@ export declare namespace input {
     PS5Controller = 'PS5Controller',
     SteamDeckController = 'SteamDeckController'
   }
+  export const enum KeyboardInputKind {
+    /** The text input that will closes on Enter keypress */
+    SingleLine = 0,
+    /** Text input that will closes on user's demand. */
+    MultiLine = 1,
+    /** Text input that will make typing email address easier. */
+    Email = 2,
+    /** Text input that will make typing numeric input easier. */
+    Numeric = 3
+  }
   export interface MotionData {
     /** Absolute Rotation (drift) X axis */
     rotQuatX: number

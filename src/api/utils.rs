@@ -2,6 +2,9 @@ use napi_derive::napi;
 
 #[napi]
 pub mod utils {
+    use std::ops::Deref;
+    use std::ops::DerefMut;
+
     use steamworks::FloatingGamepadTextInputMode as kFloatingGamepadTextInputMode;
     use steamworks::GamepadTextInputLineMode as kGamepadTextInputLineMode;
     use steamworks::GamepadTextInputMode as kGamepadTextInputMode;
@@ -37,6 +40,26 @@ pub mod utils {
         MultipleLines,
     }
 
+    struct DropDetector<T>(T);
+
+    impl<T> Deref for DropDetector<T> {
+        type Target = T;
+
+        fn deref(&self) -> &Self::Target {
+            &self.0
+        }
+    }
+    impl<T> Drop for DropDetector<T> {
+        fn drop(&mut self) {
+            println!("DropDetector dropped");
+        }
+    }
+    impl<T> DerefMut for DropDetector<T> {
+        fn deref_mut(&mut self) -> &mut Self::Target {
+            &mut self.0
+        }
+    }
+
     /// @returns the entered text, or null if cancelled or could not show the input
     #[napi]
     pub async fn show_gamepad_text_input(
@@ -51,7 +74,7 @@ pub mod utils {
         let (tx, rx) = oneshot::channel();
         let mut tx = Some(tx);
 
-        let opened = client.utils().show_gamepad_text_input(
+        let (opened, _cb) = client.utils().show_gamepad_text_input(
             match input_mode {
                 GamepadTextInputMode::Normal => kGamepadTextInputMode::Normal,
                 GamepadTextInputMode::Password => kGamepadTextInputMode::Password,
@@ -64,17 +87,23 @@ pub mod utils {
             max_characters,
             existing_text.as_deref(),
             move |dismissed_data| {
+                println!("Gamepad text input dismissed");
                 if let Some(tx) = tx.take() {
+                    println!("Sending entered text back");
                     let text = client
                         .utils()
                         .get_entered_gamepad_text_input(&dismissed_data);
+                    println!("Sending entered text back: {:#?}", text);
                     tx.send(text).unwrap();
+                    println!("Sent entered text back");
                 }
             },
         );
-
+        println!("show_gamepad_text_input opened: {}", opened);
         if opened {
-            rx.await.unwrap()
+            let a = rx.await.ok().flatten();
+            println!("show_gamepad_text_input result: {:#?}", a);
+            a
         } else {
             None
         }
@@ -102,7 +131,7 @@ pub mod utils {
         let (tx, rx) = oneshot::channel();
         let mut tx = Some(tx);
 
-        let opened = client.utils().show_floating_gamepad_text_input(
+        let (opened, _cb) = client.utils().show_floating_gamepad_text_input(
             match keyboard_mode {
                 FloatingGamepadTextInputMode::SingleLine => {
                     kFloatingGamepadTextInputMode::SingleLine

@@ -26,20 +26,19 @@ impl From<steamworks::Friend> for FriendInfo {
 
 #[napi]
 pub mod friends {
-    
+
     use std::ops::{Deref, DerefMut};
 
     use crate::api::friends::pretty_panic_but_not_panic;
 
     use super::FriendInfo;
-    use napi::{Error, bindgen_prelude::BigInt};
+    use napi::{bindgen_prelude::BigInt, Error};
     use steamworks::{CallbackHandle, PersonaStateChange};
     use tokio::sync::oneshot;
 
     struct BetterCallback(CallbackHandle, steamworks::SteamId);
     impl Drop for BetterCallback {
-        fn drop(&mut self) {
-        }
+        fn drop(&mut self) {}
     }
 
     impl Deref for BetterCallback {
@@ -122,15 +121,24 @@ pub mod friends {
                         e
                     ));
                     loop {
-                        if !client.friends().request_user_information(steam_id, require_name_only) {
+                        if !client
+                            .friends()
+                            .request_user_information(steam_id, require_name_only)
+                        {
                             break;
                         }
                     }
-                    println!("Fetched user information for {} after multiple rounds of abuse.", steam_id.steamid32());
+                    println!(
+                        "Fetched user information for {} after multiple rounds of abuse.",
+                        steam_id.steamid32()
+                    );
                     return Ok(client.friends().get_friend(steam_id).into());
                 }
                 _ => {
-                    println!("Fetched user information for {}, the steamcallback actually works!", steam_id.steamid32());
+                    println!(
+                        "Fetched user information for {}, the steamcallback actually works!",
+                        steam_id.steamid32()
+                    );
                     Ok(client.friends().get_friend(steam_id).into())
                 }
             }
@@ -139,7 +147,10 @@ pub mod friends {
         // println!("Dropping callback for {}", steam_id.steamid32());
         // println!("Fetched user information for {}", steam_id.steamid32());
         else {
-            println!("Fetched user information for {} without a callback (precached)", steam_id.steamid32());
+            println!(
+                "Fetched user information for {} without a callback (precached)",
+                steam_id.steamid32()
+            );
             drop(callback);
             Ok(client.friends().get_friend(steam_id).into())
         }
