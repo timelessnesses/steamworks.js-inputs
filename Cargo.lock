@@ -440,6 +440,7 @@ checksum = "7a2ae44ef20feb57a68b23d846850f861394c2e02dc425a50098ae8c90267589"
 [[package]]
 name = "steamworks"
 version = "0.12.2"
+source = "git+https://github.com/timelessnesses/steamworks-rs#d660c76eaa0d096f02f929d19cffb16b17fe9caa"
 dependencies = [
  "bitflags",
  "paste",
@@ -451,6 +452,7 @@ dependencies = [
 [[package]]
 name = "steamworks-sys"
 version = "0.12.0"
+source = "git+https://github.com/timelessnesses/steamworks-rs#d660c76eaa0d096f02f929d19cffb16b17fe9caa"
 
 [[package]]
 name = "steamworksjs"
