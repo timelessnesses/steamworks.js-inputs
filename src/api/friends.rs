@@ -26,34 +26,10 @@ impl From<steamworks::Friend> for FriendInfo {
 
 #[napi]
 pub mod friends {
-
-    use std::ops::{Deref, DerefMut};
-
-    use crate::api::friends::pretty_panic_but_not_panic;
-
     use super::FriendInfo;
     use napi::{bindgen_prelude::BigInt, Error};
-    use steamworks::{CallbackHandle, PersonaStateChange};
+    use steamworks::PersonaStateChange;
     use tokio::sync::oneshot;
-
-    struct BetterCallback(CallbackHandle, steamworks::SteamId);
-    impl Drop for BetterCallback {
-        fn drop(&mut self) {}
-    }
-
-    impl Deref for BetterCallback {
-        type Target = CallbackHandle;
-
-        fn deref(&self) -> &Self::Target {
-            &self.0
-        }
-    }
-
-    impl DerefMut for BetterCallback {
-        fn deref_mut(&mut self) -> &mut Self::Target {
-            &mut self.0
-        }
-    }
 
     #[napi]
     pub async fn request_user_information(
@@ -63,100 +39,44 @@ pub mod friends {
     ) -> Result<FriendInfo, napi::Error> {
         let client = crate::client::get_client().map_err(|i| Error::from_reason(i))?;
         let steam_id = steamworks::SteamId::from_raw(steam_id.get_u64().1);
-        let (tx, rx) = oneshot::channel();
-        let mut tx = Some(tx);
-        println!("Registering callback for {}", steam_id.steamid32());
-        let callback = client.register_callback(move |player: PersonaStateChange| {
-            println!("Callback for {}", player.steam_id.steamid32()); // TODO: Remove
-            if player.steam_id == steam_id {
-                println!("Sending persona state change for {}", steam_id.steamid32());
-                if let Some(tx) = tx.take() {
-                    match tx.send(player) {
-                        Ok(_) => {
-                            println!("Sent persona state change for {}", steam_id.steamid32())
-                        }
-                        Err(e) => println!(
-                            "Failed to send persona state change for {}: {:#?}",
-                            steam_id.steamid32(),
-                            e
-                        ),
-                    }
-                }
-            }
-        });
-        let _callback = BetterCallback(callback, steam_id);
-        if client
+        
+        // Check if information is already cached
+        if !client
             .friends()
             .request_user_information(steam_id, require_name_only)
         {
-            client.run_callbacks();
-            let timeout_seconds = timeout_seconds.unwrap_or(10) as u64;
-            println!(
-                "Waiting for callback for {} for {} seconds",
-                steam_id.steamid32(),
-                timeout_seconds
-            );
-            let result =
-                tokio::time::timeout(std::time::Duration::from_secs(timeout_seconds), rx).await;
-            println!("Done waiting for callback for {}", steam_id.steamid32());
-            println!("Result for ID {}: {:?}", steam_id.steamid32(), result);
-            // pretty_panic_but_not_panic("hiiii");
-            drop(_callback);
-            match result {
-                Err(_) => {
-                    // panic!("timeout waiting for {}'s persona state change", steam_id.steamid32());
-                    /* pretty_panic_but_not_panic(&format!(
-                        "timeout waiting for {}'s persona state change",
-                        steam_id.steamid32()
-                    )); */
-                    return Err(napi::Error::from_reason(
-                        "Steam did not callback in time".to_string(),
-                    ));
-                }
-                Ok(Err(_)) => {
-                    // panic!("oneshot receive error for {}: {}", steam_id.steamid32(), e);
-                    /* pretty_panic_but_not_panic(&format!(
-                        "oneshot receive error for {}: {}\nLet's do a loop request since steam's an asshole.",
-                        steam_id.steamid32(),
-                        e
-                    )); */
-                    loop {
-                        if !client
-                            .friends()
-                            .request_user_information(steam_id, require_name_only)
-                        {
-                            break;
-                        }
-                    }
-                    println!(
-                        "Fetched user information for {} after multiple rounds of abuse.",
-                        steam_id.steamid32()
-                    );
-                    return Ok(client.friends().get_friend(steam_id).into());
-                }
-                _ => {
-                    println!(
-                        "Fetched user information for {}, the steamcallback actually works!",
-                        steam_id.steamid32()
-                    );
-                    Ok(client.friends().get_friend(steam_id).into())
+            // Information is already cached, return immediately
+            return Ok(client.friends().get_friend(steam_id).into());
+        }
+
+        // Information needs to be fetched, wait for callback
+        let (tx, rx) = oneshot::channel();
+        let mut tx = Some(tx);
+        
+        // Register callback - it will persist in global registry even if not stored
+        let _callback = client.register_callback(move |player: PersonaStateChange| {
+            if player.steam_id == steam_id {
+                if let Some(tx) = tx.take() {
+                    let _ = tx.send(());
                 }
             }
-        }
-        // drop(callback);
-        // println!("Dropping callback for {}", steam_id.steamid32());
-        // println!("Fetched user information for {}", steam_id.steamid32());
-        else {
-            println!(
-                "Fetched user information for {} without a callback (precached)",
-                steam_id.steamid32()
-            );
-            drop(_callback);
-            Ok(client.friends().get_friend(steam_id).into())
+        });
+
+        let timeout_seconds = timeout_seconds.unwrap_or(10) as u64;
+        let result =
+            tokio::time::timeout(std::time::Duration::from_secs(timeout_seconds), rx).await;
+
+        // Explicitly drop the callback handle to clean up
+        drop(_callback);
+
+        match result {
+            Ok(Ok(())) => Ok(client.friends().get_friend(steam_id).into()),
+            Ok(Err(_)) => Err(napi::Error::from_reason(
+                "Internal error: callback channel closed unexpectedly".to_string(),
+            )),
+            Err(_) => Err(napi::Error::from_reason(
+                "Timeout waiting for user information".to_string(),
+            )),
         }
     }
-}
-
-fn pretty_panic_but_not_panic(msg: &str) {
-    let _ = std::panic::catch_unwind(|| panic!("{}", msg));
 }
