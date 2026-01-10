@@ -84,7 +84,7 @@ pub mod friends {
                 }
             }
         });
-        let callback = BetterCallback(callback, steam_id);
+        let _callback = BetterCallback(callback, steam_id);
         if client
             .friends()
             .request_user_information(steam_id, require_name_only)
@@ -101,25 +101,25 @@ pub mod friends {
             println!("Done waiting for callback for {}", steam_id.steamid32());
             println!("Result for ID {}: {:?}", steam_id.steamid32(), result);
             // pretty_panic_but_not_panic("hiiii");
-            drop(callback);
+            drop(_callback);
             match result {
                 Err(_) => {
                     // panic!("timeout waiting for {}'s persona state change", steam_id.steamid32());
-                    pretty_panic_but_not_panic(&format!(
+                    /* pretty_panic_but_not_panic(&format!(
                         "timeout waiting for {}'s persona state change",
                         steam_id.steamid32()
-                    ));
+                    )); */
                     return Err(napi::Error::from_reason(
                         "Steam did not callback in time".to_string(),
                     ));
                 }
-                Ok(Err(e)) => {
+                Ok(Err(_)) => {
                     // panic!("oneshot receive error for {}: {}", steam_id.steamid32(), e);
-                    pretty_panic_but_not_panic(&format!(
+                    /* pretty_panic_but_not_panic(&format!(
                         "oneshot receive error for {}: {}\nLet's do a loop request since steam's an asshole.",
                         steam_id.steamid32(),
                         e
-                    ));
+                    )); */
                     loop {
                         if !client
                             .friends()
@@ -151,7 +151,7 @@ pub mod friends {
                 "Fetched user information for {} without a callback (precached)",
                 steam_id.steamid32()
             );
-            drop(callback);
+            drop(_callback);
             Ok(client.friends().get_friend(steam_id).into())
         }
     }
