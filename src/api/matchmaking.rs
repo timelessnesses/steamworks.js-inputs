@@ -24,6 +24,15 @@ pub mod matchmaking {
 
     #[napi]
     impl Lobby {
+
+        #[napi]
+        pub fn get_lobby_entry(&self, chat_id: i32) -> String {
+            let client = crate::client::get_client().unwrap();
+            let mut buffer = vec![0u8; 4096];
+            client.matchmaking().get_lobby_chat_entry(self.lobby_id, chat_id, &mut buffer);
+            String::from_utf8_lossy(&buffer).trim_end_matches("\0").to_string()
+        }
+
         #[napi]
         pub async fn join(&self) -> Result<Lobby, Error> {
             join_lobby(self.id.into()).await

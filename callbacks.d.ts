@@ -53,4 +53,10 @@ export interface CallbackReturns {
         order_id: number | bigint
         authorized: boolean
     }
+    [client.callback.SteamCallback.LobbyChatMessage]: {
+        lobby: bigint
+        user: bigint
+        chat_entry_type: number,
+        chat_id: number
+    }
 }

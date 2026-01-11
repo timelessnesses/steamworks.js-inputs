@@ -82,7 +82,8 @@ export declare namespace callback {
     P2PSessionRequest = 6,
     P2PSessionConnectFail = 7,
     GameLobbyJoinRequested = 8,
-    MicroTxnAuthorizationResponse = 9
+    MicroTxnAuthorizationResponse = 9,
+    LobbyChatMessage = 10
   }
 }
 
