@@ -5,7 +5,7 @@ pub mod matchmaking {
     use crate::api::localplayer::PlayerSteamId;
     use napi::bindgen_prelude::{BigInt, Error};
     use std::collections::HashMap;
-    use steamworks::LobbyId;
+    use steamworks::{LobbyId, SteamError};
     use tokio::sync::oneshot;
 
     #[napi]
@@ -24,13 +24,25 @@ pub mod matchmaking {
 
     #[napi]
     impl Lobby {
-
         #[napi]
         pub fn get_lobby_entry(&self, chat_id: i32) -> String {
             let client = crate::client::get_client().unwrap();
             let mut buffer = vec![0u8; 4096];
-            client.matchmaking().get_lobby_chat_entry(self.lobby_id, chat_id, &mut buffer);
-            String::from_utf8_lossy(&buffer).trim_end_matches("\0").to_string()
+            client
+                .matchmaking()
+                .get_lobby_chat_entry(self.lobby_id, chat_id, &mut buffer);
+            String::from_utf8_lossy(&buffer)
+                .trim_end_matches("\0")
+                .to_string()
+        }
+
+        #[napi]
+        pub fn send_lobby_message(&self, message: String) -> Result<(), napi::Error> {
+            let client = crate::client::get_client().unwrap();
+            client
+                .matchmaking()
+                .send_lobby_chat_message(self.lobby_id, message.as_bytes())
+                .map_err(|_| napi::Error::from_reason("Failed to send lobby message"))
         }
 
         #[napi]
