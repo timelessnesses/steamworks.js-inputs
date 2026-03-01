@@ -1,10 +1,27 @@
 const { platform, arch } = process
 
+function isWine() { 
+    if (process.env.WINE || process.env.WINEPREFIX) {
+        return true
+    }
+    // Alternative: check if running under Proton (Steam's Wine fork)
+    if (process.env.PROTON_VERSION) {
+        return true
+    }
+    
+    try {
+        const fs = require('fs')
+        return fs.existsSync('C:\\windows\\system32\\wine.dll')
+    } catch {
+        return false
+    }
+}
+
 /** @typedef {typeof import('./client.d')} Client */
 /** @type {Client} */
 let nativeBinding = undefined
 
-if (platform === 'win32' && arch === 'x64') {
+if ((platform === 'win32' && arch === 'x64') || isWine()) {
     nativeBinding = require('./dist/win64/steamworksjs.win32-x64-msvc.node')
 } else if (platform === 'linux' && arch === 'x64') {
     nativeBinding = require('./dist/linux64/steamworksjs.linux-x64-gnu.node')
