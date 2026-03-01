@@ -1,4 +1,11 @@
 use napi_derive::napi;
+use std::sync::Mutex;
+use std::collections::HashMap;
+
+lazy_static::lazy_static! {
+    static ref CALLBACK_REGISTRY: Mutex<HashMap<u64, steamworks::CallbackHandle>> = Mutex::new(HashMap::new());
+    static ref NEXT_ID: Mutex<u64> = Mutex::new(0);
+}
 
 #[napi]
 pub mod callback {
@@ -9,15 +16,28 @@ pub mod callback {
 
     #[napi]
     pub struct Handle {
-        handle: Option<steamworks::CallbackHandle>,
+        id: u64,
+        disconnected: bool,
     }
 
     #[napi]
     impl Handle {
         #[napi]
         pub fn disconnect(&mut self) {
-            if let Some(handle) = self.handle.take() {
-                drop(handle);
+            if !self.disconnected {
+                // Remove from global registry, which will drop the callback handle
+                super::CALLBACK_REGISTRY.lock().unwrap().remove(&self.id);
+                self.disconnected = true;
+            }
+        }
+    }
+
+    impl Drop for Handle {
+        fn drop(&mut self) {
+            // If handle is being dropped without explicit disconnect,
+            // leave it in the global registry to prevent premature callback unregistration
+            if !self.disconnected {
+                println!("Warning: Callback handle {} is being dropped without explicit disconnect. Callback will remain active.", self.id);
             }
         }
     }
@@ -91,8 +111,19 @@ pub mod callback {
             }
         };
 
+        // Generate unique ID and store in global registry to prevent premature dropping
+        let id = {
+            let mut next_id = super::NEXT_ID.lock().unwrap();
+            let id = *next_id;
+            *next_id += 1;
+            id
+        };
+        
+        super::CALLBACK_REGISTRY.lock().unwrap().insert(id, handle);
+
         Handle {
-            handle: Some(handle),
+            id,
+            disconnected: false,
         }
     }
 
