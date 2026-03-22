@@ -40,9 +40,10 @@ let runCallbacksInterval = undefined
 /**
  * Initialize the steam client or throw an error if it fails
  * @param {number} [appId] - App ID of the game to load, if undefined, will search for a steam_appid.txt file
+ * @param {(() => number) | undefined} [callbackDurationFactory] - A function that returns the duration of the callback in milliseconds so callbacks duration can be customized on state changes.
  * @returns {Omit<Client, 'init' | 'runCallbacks'>}
 */
-module.exports.init = (appId) => {
+module.exports.init = (appId, callbackDurationFactory) => {
     const { init: internalInit, runCallbacks, restartAppIfNecessary, ...api } = nativeBinding
 
     internalInit(appId)
@@ -51,7 +52,7 @@ module.exports.init = (appId) => {
     runCallbacksInterval = setInterval(() => {
         // console.log("Running callbacks")
         runCallbacks()
-    }, 1000 / 120)
+    }, callbackDurationFactory ? callbackDurationFactory() : 1000 / 60)
 
     return api
 }
