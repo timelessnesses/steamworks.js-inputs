@@ -620,6 +620,8 @@ export declare namespace localplayer {
 
 export declare namespace matchmaking {
   export class Lobby {
+    getLobbyEntry(chatId: number): string
+    sendLobbyMessage(message: string): void
     join(): Promise<Lobby>
     leave(): void
     openInviteDialog(): void
@@ -709,6 +711,24 @@ export declare namespace overlay {
     AddToCart = 1,
     AddToCartAndShow = 2
   }
+}
+
+export declare namespace socket {
+  export class Socket {
+    sendMessage(data: Uint8Array, sendFlags: number): void
+    /** Please poll this method regularly to receive messages. */
+    receiveMessage(maxMessage: number): Array<Buffer>
+  }
+  export const AUTO_RESTART_BROKEN_SESSION: number
+  export function connectP2P(host: bigint, port: number): Socket
+  export const NO_DELAY: number
+  export const NO_NAGLE: number
+  export const RELIABLE: number
+  export const RELIABLE_NO_NAGLE: number
+  export const UNRELIABLE: number
+  export const UNRELIABLE_NO_DELAY: number
+  export const UNRELIABLE_NO_NAGLE: number
+  export const USE_CURRENT_THREAD: number
 }
 
 export declare namespace stats {

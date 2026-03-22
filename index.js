@@ -35,12 +35,12 @@ if ((platform === 'win32' && arch === 'x64') || isWine()) {
     throw new Error(`Unsupported OS: ${platform}, architecture: ${arch}`)
 }
 
-let runCallbacksInterval = undefined
+let runCallbacksTimer = undefined
 
 /**
  * Initialize the steam client or throw an error if it fails
  * @param {number} [appId] - App ID of the game to load, if undefined, will search for a steam_appid.txt file
- * @param {(() => number) | undefined} [callbackDurationFactory] - A function that returns the duration of the callback in milliseconds so callbacks duration can be customized on state changes.
+ * @param {(function(Omit<Client, 'init' | 'runCallbacks'>): number) | undefined} [callbackDurationFactory] - A function that returns the duration of the callback in milliseconds so callbacks duration can be customized on state changes.
  * @returns {Omit<Client, 'init' | 'runCallbacks'>}
 */
 module.exports.init = (appId, callbackDurationFactory) => {
@@ -48,11 +48,16 @@ module.exports.init = (appId, callbackDurationFactory) => {
 
     internalInit(appId)
 
-    clearInterval(runCallbacksInterval)
-    runCallbacksInterval = setInterval(() => {
-        // console.log("Running callbacks")
+    clearTimeout(runCallbacksTimer)
+    runCallbacks()
+    
+    const tick = () => {
         runCallbacks()
-    }, callbackDurationFactory ? callbackDurationFactory() : 1000 / 60)
+        const duration = callbackDurationFactory ? callbackDurationFactory(api) : 1000 / 60;
+        runCallbacksTimer = setTimeout(tick, duration)
+    }
+
+    tick()
 
     return api
 }
@@ -61,9 +66,9 @@ module.exports.init = (appId, callbackDurationFactory) => {
  * @description Shuts down the steam client
  */
 module.exports.shutdown = () => { 
-    clearInterval(runCallbacksInterval)
+    clearTimeout(runCallbacksTimer)
     nativeBinding.shutdownClient()
-    runCallbacksInterval = undefined
+    runCallbacksTimer = undefined
 }
 
 /**
