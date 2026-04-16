@@ -3,7 +3,7 @@ const { init } = require('../index.js')
 
 const client = init(3782120)
 
-const manifestPath = path.join(__dirname, '../aufh.vdf')
+const manifestPath = path.join(__dirname, '../controllers/ps4_default.vdf')
 console.log('Using manifest:', manifestPath)
 console.log(client.input.setInputActionManifestFilePath(manifestPath))
 
@@ -55,6 +55,5 @@ setInterval(() => {
         console.log("Triggering a Vibration...")
         controller.triggerVibration(1000, 1000)
         console.log("Done")
-        controller.triggerVibration(0, 0)
     })
 }, 1000)

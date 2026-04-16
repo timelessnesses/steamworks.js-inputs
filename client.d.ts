@@ -121,6 +121,7 @@ export declare namespace input {
      * use something like `setTimeout` to make a timed vibration
      */
     triggerVibration(leftSpeedMicroSecond: number, rightSpeedMicroSecond: number): void
+    setLightbarColor(red: number, green: number, blue: number, restoreDefaultLightbarColor: boolean): void
     getAnalogActionOrigins(actionSetHandle: bigint, analogActionHandle: bigint): Array<InputActionOrigins>
     getDigitalActionOrigins(actionSetHandle: bigint, digitalActionHandle: bigint): Array<InputActionOrigins>
     getCurrentActiveActionSet(): bigint

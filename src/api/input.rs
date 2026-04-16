@@ -150,6 +150,22 @@ pub mod input {
         }
 
         #[napi]
+        pub fn set_lightbar_color(&self, red: u8, green: u8, blue: u8, restore_default_lightbar_color: bool) {
+            unsafe {
+                let x = steamworks::sys::SteamAPI_SteamInput_v006();
+                steamworks::sys::SteamAPI_ISteamInput_SetLEDColor(
+                    x,
+                    self.handle.get_u64().1,
+                    red,
+                    green,
+                    blue,
+                    // enum doesn't work because it's i32 representation, not u32... soooo...
+                    if restore_default_lightbar_color { 1 } else { 0 },
+                );
+            }
+        }
+
+        #[napi]
         pub fn get_analog_action_origins(
             &self,
             action_set_handle: BigInt,
